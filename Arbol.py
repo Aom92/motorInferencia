@@ -31,11 +31,9 @@ class Arbol:
             prefix=prefix+nodo.val
             if nodo.leftChild != None:
                 prefix=self.preorden(nodo.leftChild,prefix)
-                return prefix
             
             if nodo.rightChild != None:
                 prefix=self.preorden(nodo.rightChild,prefix)
-                return prefix
                 
             return prefix
         

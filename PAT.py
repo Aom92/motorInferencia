@@ -1,16 +1,11 @@
-from infixToPrefix import infixToPrefix, getElements
+from infixToPrefix import infixToPrefix
+from ElementGetter import getElementsPrefix, getElements
 from Stack import Stack
 import copy
 
-left=[]
-right=[]
-
-"""
-    @brief Funcion que evalua una expresion del antecedente del metodo de Prueba automatica de teoremas
-    @param La expresion a evaluar, el indice donde se encuentra dicha expresion y la pila donde se encuentran las evaluaciones
-    @return Checar si si es necesario
-"""
 def evaluacionIzquierda(expresion, indice, stack):
+
+    #print(expresion)
     #Checa si se esta negando una premisa logica para poder aplicar la operacion correspondiente
     if((expresion[0]=='!' and expresion[1]=='(') or (len(expresion)==2 and expresion[0]=='!')):
         cambio=stack.pop()
@@ -20,23 +15,23 @@ def evaluacionIzquierda(expresion, indice, stack):
         return stack
 
     #Obtenemos los elementos de la expresion [lado izquierdo, operacion, lado derecho]
-    elements=getElements(expresion)
-    if(elements[1]=='^'):
+    elements=getElementsPrefix(expresion)
+    if(elements[0]=='^'):
         cambio=stack.pop()
         cambio[0].pop(indice)
-        cambio[0].append(elements[0])
+        cambio[0].append(elements[1])
         cambio[0].append(elements[2])
         stack.push(cambio)
         return stack
 
-    elif(elements[1]=='v'):
+    elif(elements[0]=='v'):
         tupla1=stack.pop()
         tupla1[0].pop(indice)
         tupla2=copy.deepcopy(tupla1)
 
         stack.push(tupla1)
         cambio1=stack.pop()
-        cambio1[0].append(elements[0])
+        cambio1[0].append(elements[1])
         stack.push(cambio1)
 
         stack.push(tupla2)
@@ -45,7 +40,7 @@ def evaluacionIzquierda(expresion, indice, stack):
         stack.push(cambio2)
         return stack
 
-    elif(elements[1]=='>'):
+    elif(elements[0]=='>'):
         tupla1=stack.pop()
         tupla1[0].pop(indice)
         tupla2=copy.deepcopy(tupla1)
@@ -57,16 +52,18 @@ def evaluacionIzquierda(expresion, indice, stack):
 
         stack.push(tupla2)
         cambio2=stack.pop()
-        cambio2[1].append(elements[0])
+        cambio2[1].append(elements[1])
         stack.push(cambio2)
         return stack
 
 """
-    @brief Funcion que evalua una expresion del consecuente del metodo de Prueba automatica de teoremas
-    @param La expresion a evaluar, el indice donde se encuentra dicha expresion y la pila donde se encuentran las evaluaciones
-    @return Checar si si es necesario
+    #@brief Funcion que evalua una expresion del consecuente del metodo de Prueba automatica de teoremas
+    #@param La expresion a evaluar, el indice donde se encuentra dicha expresion y la pila donde se encuentran las evaluaciones
+    #@return Checar si si es necesario
 """
 def evaluacionDerecha(expresion, indice, stack):
+    #print(expresion)
+
     #Checa si se esta negando una premisa logica para poder aplicar la operacion correspondiente
     if((expresion[0]=='!' and expresion[1]=='(')  or (len(expresion)==2 and expresion[0]=='!')):
         cambio=stack.pop()
@@ -76,15 +73,16 @@ def evaluacionDerecha(expresion, indice, stack):
         return stack
 
     #Obtenemos los elementos de la expresion [lado izquierdo, operacion, lado derecho]
-    elements=getElements(expresion)
-    if(elements[1]=='^'):
+    elements=getElementsPrefix(expresion)
+    if(elements[0]=='^'):
         tupla1=stack.pop()
         tupla1[1].pop(indice)
         tupla2=copy.deepcopy(tupla1)
 
         stack.push(tupla1)
         cambio1=stack.pop()
-        cambio1[1].append(elements[0])
+        cambio1[1].append(elements[2]) #element[0] checar
+
         stack.push(cambio1)
 
         stack.push(tupla2)
@@ -93,26 +91,27 @@ def evaluacionDerecha(expresion, indice, stack):
         stack.push(cambio2)
         return stack
 
-    elif(elements[1]=='v'):
+    elif(elements[0]=='v'):
         cambio=stack.pop()
         cambio[1].pop(indice)
-        cambio[1].append(elements[0])
+        cambio[1].append(elements[1])
         cambio[1].append(elements[2])
         stack.push(cambio)
         return stack
 
-    elif(elements[1]=='>'):
+    elif(elements[0]=='>'):
         cambio=stack.pop()
         cambio[1].pop(indice)
-        cambio[0].append(elements[0])
+        cambio[0].append(elements[1])
         cambio[1].append(elements[2])
         stack.push(cambio)
         return stack
 
 """
-    @brief Funcion que se encarga de ir enviando las distintas expresiones a sus respectivas evaluaciones hasta que todas sean atomicas
-    @param La pila que contiene el proceso de evaluacion
-    @return El valor retornado al checar si es valido
+
+    #@brief Funcion que se encarga de ir enviando las distintas expresiones a sus respectivas evaluaciones hasta que todas sean atomicas
+    #@param La pila que contiene el proceso de evaluacion
+    #@return El valor retornado al checar si es valido
 """
 def evaluarExpresion(stack):
     expresionesFinales=[]
@@ -159,7 +158,7 @@ def evaluarExpresion(stack):
     @return Por el momento una cadena diciendo si es valido o no la operacion logica
 """
 def checarSiValido(expresiones):
-    print(len(expresiones))
+    #print(len(expresiones))
     axiomas=[]
     #Iteramos las expresiones finales
     for i in expresiones:
@@ -215,31 +214,35 @@ def checarSiValido(expresiones):
         return 'es invalida'
 
 
-
-
 stack = Stack()
-left = ["(PvQ)>R","!P>S","!Q>U","!R","V>(!U^!S)"]
-right = ["!V"]
 
-#Unicamente se usa en caso de que se desee que el usuario ingrese las expresiones
-"""while(True):
-    expresion=input("Ingrese la expresion logica: ")
-    left.append(expresion)
-    continuar=input("Desea continuar? [S/N]")
-    if(continuar == 'N'):
-        break
+#Posibles expresiones prueba
+left = ["((PvQ)>(!P^Q))^(P>Q)"]
+right = ["!P"]
+#left=["!A>B","B>!C","Av!D","CvD"]
+#right=["A"]
+#left = ["(PvQ)>R","!P>S","!Q>U","!R","V>(!U^!S)"]
+#right = ["!V"]
 
-while(True):
-    expresion=input("Ingrese premisa de la conclusion: ")
-    right.append(expresion)
-    continuar=input("Desea continuar? [S/N]")
-    if(continuar == 'N'):
-        break"""
+infixToPrefixArrayLeft = []
+infixToPrefixArrayRight = []
+evaluaciones = []
 
-#La pila constara de una lista de arreglos (left y right) que simulan el antecidente y el consecuente
-stack.push([left,right])
+print(left,end='')
+print("=>",end='')
+print(right)
+print()
+
+for x in left:
+    infixToPrefixArrayLeft.append(infixToPrefix(x))
+
+for x in right:
+    infixToPrefixArrayRight.append(infixToPrefix(x))
+
+stack.push([infixToPrefixArrayLeft,infixToPrefixArrayRight])
 
 print('\nSu expresion logica '+evaluarExpresion(stack))
+
 
 
         

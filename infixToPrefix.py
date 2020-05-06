@@ -1,28 +1,5 @@
 from Arbol import Arbol
-
-"""
-    @brief Funcion que se encarga de encontrar la operacion mas externa dentro de una expresion logica
-    @param La expresion a revisar
-    @return Una tupla con el indice en donde se encuentra el operador dentro de la expresion y el operador
-"""
-def getExternal(expresion):
-    numParentesis=0
-    #Iteramos la expresion revisando sus caracteres
-    for i in range (0, len(expresion)):
-        #Si es un parentesis de apertura lo indicamos aumentando numParentesis (me dio flojera usar pilas) y si es de cierre lo disminuimos
-        if(expresion[i] == '('):
-            numParentesis=numParentesis+1
-        elif(expresion[i] == ')'):
-            numParentesis=numParentesis-1
-        elif(expresion[i]=='v' or expresion[i]=='^' or expresion[i]=='>'):
-            #Checamos que no se encuentre dentro de una serie de parentesis
-            if(numParentesis == 0):
-                toReturn=(i,expresion[i])
-                return toReturn
-    else:
-        return 0
-
-
+from ElementGetter import getExternal
 """
     @brief Funcion que se encarga de ingresar los elementos de la expresion logica del lado izquierdo del nodo actual del arbol
     @param La expresion a revisar
@@ -116,6 +93,7 @@ def infixToPrefix(expresion):
 
     #Obtenemos la operacion mas externa
     external=getExternal(expresion)
+    #print("external:",external)
     #Si existe la operacion la separamos
     if(external!=0):
         val=external[1]
@@ -156,32 +134,11 @@ def infixToPrefix(expresion):
         prefix=arbol.preorden(arbol.root, prefix)
         return prefix   
 
-"""
-    @brief Funcion que se encarga de dividir la expresion logica en [antes de operador, operador, despues de operador]
-    @param La expresion a revisar
-    @return Lista con los elementos de la operacion en caso de haber una o 0 en caso de no haberlo
-"""
-def getElements(expresion):
-    external=getExternal(expresion)
-    if(external!=0):
-        val=external[1]
-        left=expresion[:external[0]]
-        right=expresion[external[0]+1:]
-
-        if(left[0]=='(' and left[len(left)-1]==')'):
-            left=left[1:]
-            left=left[:len(left)-1]
-        if(right[0]=='(' and right[len(right)-1]==')'):
-            right=right[1:]
-            right=right[:len(right)-1]
-
-        lista = [left,external[1],right]
-        return lista
-    return 0
-
+    else:
+        return expresion
 
 if __name__ == "__main__":
-    expresion = "(Q^R)>((PvQ)^!R)"
+    expresion = "(PvQ)>R"
     print(expresion)
     prefix=infixToPrefix(expresion)  
     print("Prefix:"+prefix)
