@@ -13,9 +13,9 @@ class Carta:
         self.numero = numero
         self.color = color
         if (efecto == ""):  
-            self.efecto = efecto
+            self.efecto = ""
         else:
-            self.efecto = "Sin Efecto"
+            self.efecto = efecto
     
     """
     Imprime los atributos de la carta.
@@ -23,8 +23,11 @@ class Carta:
     def mostrar(self):
         if(self.efecto == ""):
              print("{} de color {}".format(self.numero,self.color))
-        else:   
-            print("{} de color {}".format(self.efecto, self.color))
+        else: 
+            if(self.color == ""):   
+                print("{}".format(self.efecto))
+            else:
+                print("{} de color {}".format(self.efecto, self.color))
 
 
 """
