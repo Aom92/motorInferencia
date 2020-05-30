@@ -1,8 +1,4 @@
 class Carta:
-
-    
-
-
     """
     Constructor de un objeto carta
     numero: Numero de la carta
@@ -29,6 +25,15 @@ class Carta:
             else:
                 print("{} de color {}".format(self.efecto, self.color))
 
+    def getColor(self):
+        return self.color
+
+    def getValue(self):
+        return self.numero
+
+    def toString(self):
+        return "{}:{}".format(self.numero,self.color)
+
 
 """
 Ejemplo de uso 
@@ -36,5 +41,3 @@ Carta()
 Carta = Carta(1,"Rojo","")
 Carta.mostrar()    
 """
-
-
