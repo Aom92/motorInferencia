@@ -14,13 +14,13 @@ class Mazo:
         for Color in ["Rojo", "Azul", "Amarillo", "Verde"]:
             for Numero in range(0,10):
                 self.cartas.append(Carta(Numero,Color,""))
-            for Numero in range(1,10):
-                self.cartas.append(Carta(Numero,Color,""))
+            #for Numero in range(1,10):
+                #self.cartas.append(Carta(Numero,Color,""))
             for Especial in ["Salto", "Reversa", "+2"]:
                 self.cartas.append(Carta("",Color,Especial))
-                self.cartas.append(Carta("",Color,Especial))
-            for Comodin in ["Comodin","Comodin +4"]:
-                self.cartas.append(Carta("","",Comodin))                
+                #self.cartas.append(Carta("",Color,Especial))
+            #for Comodin in ["Comodin","Comodin +4"]:
+                #self.cartas.append(Carta("","",Comodin))                
     """
     Imprime todas las cartas dentro del Mazo
     """
