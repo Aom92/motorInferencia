@@ -13,7 +13,7 @@ class Stack:
     def pop(self):
         return self.structure.pop()
 
-    def isEmpty(slef):
+    def isEmpty(self):
         return len(self.structure) == 0
     
     def top(self):
