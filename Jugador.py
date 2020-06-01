@@ -13,6 +13,10 @@ class Jugador:
         for carta in self.mano:
             carta.mostrar()
 
+    def getName(self):
+        return self.nombre
+        
+
 
 """
 Ejemplo de Uso
