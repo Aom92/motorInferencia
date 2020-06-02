@@ -18,7 +18,8 @@ def Draw(UNO,Tablero,IA,P1):
     print("== Turno {}:  ==".format(turno))
 
     print("========  En la mesa... : ==========".format(Tablero.getName()))
-    print(Tablero.mano[len(Tablero.mano)-1].mostrar())
+    #print(Tablero.mano[len(Tablero.mano)-1].mostrar())
+    Tablero.mostrarMano()
     print("\n")
 
     print("========  Cartas de {}:  ========".format(IA.getName()))
@@ -34,10 +35,10 @@ def Draw(UNO,Tablero,IA,P1):
 
     print("\n")
 
-
     return 0
 
 def IAPiensa(IA,tablero, mazo):
+    #Revisar si se lanzo una carta especial que afecte al jugador en el turno anterior
     if(tablero.mano[len(tablero.mano)-1].getEfecto=="+2"):
         for i in range(0,2):
             IA.tomarCarta(mazo)
@@ -74,6 +75,7 @@ def IAPiensa(IA,tablero, mazo):
 
 
 def juegaJugador(jugador, tablero, mazo):
+    #Revisar si se lanzo una carta especial que afecte al jugador en el turno anterior
     if(tablero.mano[len(tablero.mano)-1].getEfecto=="+2"):
         for i in range(0,2):
             jugador.tomarCarta(mazo)
@@ -85,6 +87,7 @@ def juegaJugador(jugador, tablero, mazo):
     elif(tablero.mano[len(tablero.mano)-1].getEfecto=="Salto"):
         return
 
+    #Mostrar mano del jugador para ver si hay que 'comer' cartas.
     P1.mostrarMano()
     yes = input("Va a tomar carta? [Y/n]\n$ ")
     carta = None
@@ -93,12 +96,18 @@ def juegaJugador(jugador, tablero, mazo):
         P1.mostrarMano()
         yes = input("Va a tomar carta? [Y/n]\n$ ")
     
+    #Selección de carta a jugar
     jugador.mostrarMano()
     i = int(input("ingrese carta a dejar\n$ "))
+
+    #Se deja carta en el tablero
     carta = jugador.dejaCarta(i)
     print(carta.toString())
     tablero.recibeCarta(carta)
-    if(carta.getEfecto()=="Comodin" or carta.getEfecto()=="Comodin + 4"):
+
+    #La comparacion del if se puede cambiar por solo revisar si 'carta' tiene un efecto:
+    #Checar como se generan las cartas dentro de la clase Mazo
+    if(carta.getEfecto()=="Comodin" or carta.getEfecto()=="Comodin + 4"):   
         print("Escoja el color de la siguiente carta")
         opciones = ["Azul","Rojo","Amarillo","Verde"]
         iter = 0
@@ -109,6 +118,7 @@ def juegaJugador(jugador, tablero, mazo):
         nuevaCarta = Carta("",opciones[i],"")
         tablero.recibeCarta(nuevaCarta)
 
+#Game LOOP
 while ( estado ):
 
     #Inicio del Juego
@@ -140,14 +150,17 @@ while ( estado ):
     #Logica del Juego
 
     #while(len(P1.getMano())>0 and len(IA.getMano())>0):
+    UNO=False
+    Draw(UNO,Tablero,IA,P1)
     juegaJugador(P1, Tablero, mazo)
     IA.setContador(len(P1.getMano()))
     IAPiensa(IA,Tablero,mazo)
-    UNO=False
+    
     if(len(IA.getMano())==1):
         UNO=True
     Draw(UNO,Tablero,IA,P1)
 
+    turno = turno + 1
     
 
 

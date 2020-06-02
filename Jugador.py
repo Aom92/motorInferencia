@@ -4,7 +4,7 @@ class Jugador:
     def __init__(self, nombre):
         self.nombre = nombre
         self.mano = []
-        self.topCard = None
+        self.topCard = None # !! Es necesario (?)
     
     def tomarCarta(self, mazo):
         self.mano.append(mazo.tomarCarta())
@@ -14,7 +14,8 @@ class Jugador:
 
     def recibeCarta(self,carta):
         self.mano.append(carta)
-        self.topCard = carta
+        self.topCard = carta   # !! 
+        
 
     def dejaCarta(self,iterator):
         return self.mano.pop(iterator)
