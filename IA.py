@@ -22,8 +22,7 @@ class IA(Jugador):
         for i in self.mano:
             for j in self.cartas:
                 if(j.toString()==i.toString()):
-                    position=self.cartas.index(j)
-                    self.cartas.pop(position)
+                    self.cartas.pop(self.cartas.index(j))
 
     def getMano(self):
         return self.mano
@@ -49,6 +48,8 @@ class IA(Jugador):
                     print(self.tablero.getUltimaCarta().toString())
                     inDeck=True
                     nuevoJuego.append(i)
+
+        print("Saliendo")
 
         if(inDeck == True):
             self.juegos = []
@@ -120,11 +121,10 @@ class IA(Jugador):
         return self.nombre
 
     def getPosibilities(self):
+        self.juegos = []
         self.arbol.setRoot(self.tablero.mano[len(self.tablero.mano)-1])
         self.arbol.insertPosibilities(self.cartas, self.mano, 5, self.arbol.getRoot())
         juegos = self.posibilidades.getCards(self.arbol)
-
-        self.juegos = []
 
         for i in juegos:
             if(i[len(i)-1].getEfecto() != ""):
