@@ -16,6 +16,7 @@ class ArbolDecision:
         elif nodo.getValue().getEfecto() != "":
             return
 
+        #if(niveles%2 == 0):
         if(niveles % 2 != 0):
             for i in mano:
                 carta = nodo.getValue()
@@ -44,34 +45,35 @@ class ArbolDecision:
         for i in mano:
             newMano.append(i)
 
+        #if(niveles%2 == 0):
         if(niveles%2 != 0):
             position = 0
             for i in mano:
                 if i.toString() == nodo.getValue().toString():
                     break
-                else:
-                    position = position + 1
+                position = position + 1
         
             if(position < len(mano)):
                 newMano.pop(position)
+            #mano.pop(mano.index(nodo))
         else:
             position = 0
             for i in lista:
                 if i.toString() == nodo.getValue().toString():
                     break
-                else:
-                    position = position + 1
+                position = position + 1
 
             if(position < len(lista)):
-                newLista.pop(position)
+                lista.pop(position)
+            #lista.pop(lista.index(nodo))
 
         for i in nodo.getColorCarts():
             #self.insertPosibilities(lista,niveles-1,i)
-            self.insertPosibilities(newLista,newMano,niveles-1,i)
+            self.insertPosibilities(lista,mano,niveles-1,i)
 
         for i in nodo.getNumberCarts():
             #self.insertPosibilities(lista,niveles-1,i)
-            self.insertPosibilities(newLista,newMano,niveles-1, i)
+            self.insertPosibilities(lista,mano,niveles-1, i)
 
     def getPosibilities(self,posibilidades,nodo, lista, profundidad):
 

@@ -33,7 +33,7 @@ arbol.setRoot(cartas[13])
 arbol.insertPosibilities(cartas, mano, 5, arbol.getRoot())
 
 posibilidades = Posibilidades()
-arbol.getPosibilities(posibilidades, arbol.getRoot(), "")
+arbol.getPosibilities(posibilidades, arbol.getRoot(), "",0)
 
 for i in posibilidades.getPosibilities():
     print(i)
@@ -47,4 +47,5 @@ for i in mano:
 print("\nCartas:")
 for i in cartas:
     print(i.toString())
+
 

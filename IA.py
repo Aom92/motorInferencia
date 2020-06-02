@@ -17,14 +17,13 @@ class IA(Jugador):
         self.juegos = []
         self.contador = 0
     
-    def tomarCarta(self, mazo):
+    def tomarCarta(self):
         self.mano.append(self.mazo.tomarCarta())
         for i in self.mano:
             for j in self.cartas:
                 if(j.toString()==i.toString()):
                     position=self.cartas.index(j)
                     self.cartas.pop(position)
-        return self
 
     def getMano(self):
         return self.mano
@@ -47,6 +46,7 @@ class IA(Jugador):
             #print(i)
             if(len(i)>0):
                 if(i[0].toString() == self.tablero.getUltimaCarta().toString()):
+                    print(self.tablero.getUltimaCarta().toString())
                     inDeck=True
                     nuevoJuego.append(i)
 
@@ -55,7 +55,9 @@ class IA(Jugador):
             for i in nuevoJuego:
                 self.juegos.append(i)
         else:
+            #return False
             self.getPosibilities()
+            #self.actualizaPosibilidades()
             
 
 
@@ -63,9 +65,25 @@ class IA(Jugador):
         self.actualizaPosibilidades()
         if(len(self.juegos)==0):
             self.actualizaPosibilidades()
-            return False
-        r = random.randint(0,len(self.juegos)-1)
-        carta = self.juegos[r][0]
+        if(len(self.juegos)==0):
+                return False
+        out = False
+        cont = 0
+        numeros = []
+        while(out == False):
+            r = random.randint(0,len(self.juegos)-1)
+            if(numeros.count(r)==0):
+                numeros.append(r)
+                juego = self.juegos[r]
+                cont = cont+1
+                if(len(self.juegos)!=0):
+                    carta = juego[0]
+                    for i in self.mano:
+                        if(i.toString() == carta.toString()):
+                            out = True
+            if( cont >= len(self.juegos)):
+                return False
+
         #print("{}:{}".format(carta.getColor(), carta.getValue()))
 
 
@@ -75,6 +93,7 @@ class IA(Jugador):
                 #print(j.toString(),end=",")
                 #print("")
             if(i[0].toString() == carta.toString()):
+                i.pop(0)
                 nuevoJuego.append(i)
 
         self.juegos=[]
@@ -84,6 +103,7 @@ class IA(Jugador):
         iter = 0
         for i in self.mano:
             if(i.toString()==carta.toString()):
+                print("Iter:",iter)
                 self.mano.pop(iter)
                 break
             iter = iter + 1
@@ -103,6 +123,8 @@ class IA(Jugador):
         self.arbol.setRoot(self.tablero.mano[len(self.tablero.mano)-1])
         self.arbol.insertPosibilities(self.cartas, self.mano, 5, self.arbol.getRoot())
         juegos = self.posibilidades.getCards(self.arbol)
+
+        self.juegos = []
 
         for i in juegos:
             if(i[len(i)-1].getEfecto() != ""):
@@ -144,7 +166,7 @@ class IA(Jugador):
                             highest = highest + 1
                     opciones=["Azul","Rojo","Amarillo","Verde"]
                     color = opciones[highest]
-                    return carta
+                    return [carta,color]
                 iter = iter + 1
         return [carta,color]
 

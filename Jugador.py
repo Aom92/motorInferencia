@@ -32,7 +32,7 @@ class Jugador:
         return self.nombre
 
     def getUltimaCarta(self):
-        return self.topCard
+        return self.mano[len(self.mano)-1]
         
 
 

@@ -45,7 +45,7 @@ class Posibilidades:
         for i in self.mejores:
             mano=[]
             cartas=i[1].split("=>")
-            print(i)
+            #print(i)
             for j in cartas:
                 datos = j.split(":")
                 #print(datos)
