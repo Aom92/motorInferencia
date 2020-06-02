@@ -73,20 +73,24 @@ class ArbolDecision:
             #self.insertPosibilities(lista,niveles-1,i)
             self.insertPosibilities(newLista,newMano,niveles-1, i)
 
-    def getPosibilities(self,posibilidades,nodo, lista):
+    def getPosibilities(self,posibilidades,nodo, lista, profundidad):
+
+        if(profundidad == 0):
+            posibilidades.restartPosibilities()
 
         lista = lista + "=>" + nodo.getValue().toString()
+        profundidad = profundidad+1
         
         if(len(nodo.getColorCarts())==0 and len(nodo.getNumberCarts())==0):
-            posibilidades.insertValue(lista)
+            posibilidades.insertValue((profundidad,lista))
             posibilidades.incrementIterator()
             return
 
         for i in nodo.getNumberCarts():
-            self.getPosibilities(posibilidades,i,lista)
+            self.getPosibilities(posibilidades,i,lista,profundidad+1)
 
         for i in nodo.getColorCarts():
-            self.getPosibilities(posibilidades,i,lista)
+            self.getPosibilities(posibilidades,i,lista,profundidad+1)
         
         
 

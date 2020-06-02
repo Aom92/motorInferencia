@@ -8,10 +8,7 @@ class Carta:
     def __init__(self, numero, color, efecto):
         self.numero = numero
         self.color = color
-        if (efecto == ""):  
-            self.efecto = ""
-        else:
-            self.efecto = efecto
+        self.efecto = efecto
     
     """
     Imprime los atributos de la carta.
@@ -25,6 +22,9 @@ class Carta:
             else:
                 print("{} de color {}".format(self.efecto, self.color))
 
+    def getEfecto(self):
+        return self.efecto
+
     def getColor(self):
         return self.color
 
@@ -33,6 +33,7 @@ class Carta:
 
     def toString(self):
         return "{}:{}".format(self.numero,self.color)
+    
 
 
 """

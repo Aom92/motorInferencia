@@ -19,8 +19,8 @@ class Mazo:
             for Especial in ["Salto", "Reversa", "+2"]:
                 self.cartas.append(Carta("",Color,Especial))
                 #self.cartas.append(Carta("",Color,Especial))
-            #for Comodin in ["Comodin","Comodin +4"]:
-                #self.cartas.append(Carta("","",Comodin))                
+            for Comodin in ["Comodin","Comodin +4"]:
+                self.cartas.append(Carta("","",Comodin))                
     """
     Imprime todas las cartas dentro del Mazo
     """
