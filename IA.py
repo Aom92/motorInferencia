@@ -63,7 +63,7 @@ class IA(Jugador):
 
 
     def dejaCarta(self):        
-        self.actualizaPosibilidades()
+        self.getPosibilities()
         if(len(self.juegos)==0):
             self.actualizaPosibilidades()
         if(len(self.juegos)==0):
