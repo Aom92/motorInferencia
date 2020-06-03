@@ -170,9 +170,9 @@ class IA(Jugador):
                     self.juegos.append(juegos[r])
 
         #No se que hace esta linea, favor de no quitar
-        #for i in self.juegos:
-            #if(len(i)>0):
-                #i.pop(0)
+        for i in self.juegos:
+            if(len(i)>0):
+                i.pop(0)
 
     """Funcion encargada de ver si es un momento optimo para dejar un comodin +4"""
     def ifDejaMasCuatro(self):
