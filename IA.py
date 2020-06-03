@@ -121,8 +121,8 @@ class IA(Jugador):
                                 break
                 print("Jugada:",out)
                 #Igualmente checamos que no hayamos intentado ya con todas las posibilidades que hay
-            if( cont >= len(self.juegos)):
-                return False
+                if( cont >= len(self.juegos)):
+                    return False
 
         print("Saliendo")
 
@@ -192,7 +192,7 @@ class IA(Jugador):
             if(len(i)>0):
                 i.pop(0)
 
-        print("Juegos:",self.juegos)
+        #print("Juegos:",self.juegos)
 
     """Funcion encargada de ver si es un momento optimo para dejar un comodin +4"""
     def ifDejaMasCuatro(self):
