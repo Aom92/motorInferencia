@@ -17,7 +17,14 @@ def traductorColor(listaCartas):
             color = "Y"
         else:
             color = "G"
-        numero = ""+str(listaCartas[i].getValue())
+
+        if(listaCartas[i].getEfecto()!=""):
+            numero="E"
+        else:
+            if(listaCartas[i].getValue()==""):
+                numero="C"
+            else:
+                numero = ""+str(listaCartas[i].getValue())
         
         if(i<2):
             left.append(color)
@@ -31,8 +38,8 @@ def traductorColor(listaCartas):
     expresion = left[2]
     toReturnLeft.append(expresion[1]+">"+expresion)
 
-    print(toReturnLeft)
-    print(toReturnRight)
+    #print(toReturnLeft)
+    #print(toReturnRight)
 
     return [toReturnLeft,toReturnRight]
 
@@ -49,7 +56,14 @@ def traductorNumero(listaCartas):
             color = "Y"
         else:
             color = "G"
-        numero = ""+str(listaCartas[i].getValue())
+
+        if(listaCartas[i].getEfecto()!=""):
+            numero="E"
+        else:
+            if(listaCartas[i].getValue()==""):
+                numero="C"
+            else:
+                numero = ""+str(listaCartas[i].getValue())
         
         if(i<2):
             left.append(numero)
@@ -63,8 +77,8 @@ def traductorNumero(listaCartas):
     expresion = left[2]
     toReturnLeft.append(expresion[3]+">"+expresion)
 
-    print(toReturnLeft)
-    print(toReturnRight)
+    #print(toReturnLeft)
+    #print(toReturnRight)
 
     return [toReturnLeft,toReturnRight]
 
@@ -232,7 +246,7 @@ def checarSiValido(expresiones):
     axiomas=[]
     #Iteramos las expresiones finales
     for i in expresiones:
-        print(i)
+        #print(i)
         left=i[0]
         right=i[1]
         trueLeft=True
@@ -310,11 +324,13 @@ def jugadaValida(listaCartas):
     validoNumero = evaluarExpresion(stackNumero)
     del stackNumero
 
-    print("Color",validoColor)
-    print("Numero",validoNumero)
+    #print("Color",validoColor)
+    #print("Numero",validoNumero)
 
     if(validoColor == True or validoNumero == True):
         return True
+    else:
+        return False
 
 
 if __name__ == "__main__":

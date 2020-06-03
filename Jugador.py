@@ -19,6 +19,9 @@ class Jugador:
     def dejaCarta(self,iterator):
         return self.mano.pop(iterator)
 
+    def getCarta(self,iterator):
+        return self.mano[iterator]
+
     def mostrarMano(self):
         i=0
         print(len(self.mano))

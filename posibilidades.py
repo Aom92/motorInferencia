@@ -29,7 +29,7 @@ class Posibilidades:
         for i in self.lista:
             if(biggest < i[0]):
                 biggest = i[0]
-        print("Biggest {}".format(biggest))
+        #print("Biggest {}".format(biggest))
         return biggest
 
     def getBiggestList(self,arbol):
@@ -38,12 +38,31 @@ class Posibilidades:
         for i in self.lista:
             if(i[0]==biggest):
                 self.mejores.append(i)
+            cartas=i[1].split("=>")
+            print(i)
+            mano = []
+            for j in cartas:
+                datos = j.split(":")
+                #print(datos)
+                numero = ""
+                efecto = ""
+                #print(datos)                
+                if(len(datos)>1):
+                    if(len(datos[0])==1):
+                        numero = datos[0]
+                    else:
+                        efecto = datos[0]
+                    color = datos[1]
+                    mano.append(Carta(numero,color,efecto))
+            if(mano[len(mano)-1].getEfecto()!=""):
+                self.mejores.append(i)
     
     def getCards(self, arbol):
         self.getBiggestList(arbol)
         self.cartas=[]
         for i in self.mejores:
             mano=[]
+            #print(i)
             cartas=i[1].split("=>")
             #print(i)
             for j in cartas:

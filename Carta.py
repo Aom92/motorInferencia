@@ -32,6 +32,8 @@ class Carta:
         return self.numero
 
     def toString(self):
+        if(self.efecto!=""):
+            return "{}:{}".format(self.efecto,self.color)
         return "{}:{}".format(self.numero,self.color)
     
 

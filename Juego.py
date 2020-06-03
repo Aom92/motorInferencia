@@ -2,6 +2,7 @@ from Carta import Carta
 from Mazo import Mazo
 from Jugador import Jugador
 from IA import IA
+from PAT import jugadaValida
 
 import os
 
@@ -70,7 +71,7 @@ def IAPiensa(IA,tablero, mazo):
 
                 carta= IA.dejaCarta()
                 while(carta==False):
-                    print("IA TOMO UNA CORTO")
+                    print("IA TOMO UNA CARTA")
                     IA.tomarCarta()
                     IA.mostrarMano()
                     carta= IA.dejaCarta()
@@ -80,7 +81,8 @@ def IAPiensa(IA,tablero, mazo):
 
             else:
 
-                print("Carta jugada = "+carta[0].mostrar())
+                print("Carta jugada = ",end="")
+                carta[0].mostrar()
                 tablero.recibeCarta(carta[0])
                 carta = Carta("",carta[1],"")
                 tablero.recibeCarta(carta)
@@ -89,7 +91,8 @@ def IAPiensa(IA,tablero, mazo):
 
         else:
 
-            print("Carta jugada = "+carta[0].mostrar())
+            print("Carta jugada = ",end="")
+            carta[0].mostrar()
             tablero.recibeCarta(carta[0])
             tablero.recibeCarta(Carta("",carta[1],""))
             print("Carta jugada = ",end="")
@@ -110,16 +113,38 @@ def juegaJugador(jugador, tablero, mazo):
     elif(tablero.getUltimaCarta().getEfecto=="Salto"):
         return
 
-    P1.mostrarMano()
-    yes = input("Va a tomar carta? [Y/n]\n$ ")
-    carta = None
-    while(yes == "Y" or yes == "y"):
-        jugador.tomarCarta(mazo)
+    elif(tablero.getUltimaCarta().getEfecto()=="Reversa"):
+        return 0
+
+    valido = False
+    while(valido == False):
         P1.mostrarMano()
         yes = input("Va a tomar carta? [Y/n]\n$ ")
+        carta = None
+        while(yes == "Y" or yes == "y"):
+            jugador.tomarCarta(mazo)
+            P1.mostrarMano()
+            yes = input("Va a tomar carta? [Y/n]\n$ ")
     
-    jugador.mostrarMano()
-    i = int(input("ingrese carta a dejar\n$ "))
+        jugador.mostrarMano()
+        i = int(input("ingrese carta a dejar\n$ "))
+        if(i >= len(jugador.getMano())):
+            print("Numero ingresado erroneo")
+            juegaJugador(jugador, tablero, mazo)
+
+        carta = jugador.getCarta(i)
+
+        if(carta.getEfecto() != "Comodin" and carta.getEfecto() != "Comodin +4" and tablero.getUltimaCarta() != "Comodin" and tablero.getUltimaCarta() != "Comodin +4"):
+            valido = jugadaValida([tablero.getPenultimaCarta(),tablero.getUltimaCarta(),carta])
+            print(valido)
+
+            if(valido == False):
+                print("Jugada invalida")
+
+        else:
+            valido = True
+
+
     carta = jugador.dejaCarta(i)
     print(carta.toString())
     tablero.recibeCarta(carta)
@@ -156,6 +181,8 @@ while ( estado ):
 
         #Se toma una carta del Mazo para iniciar el juego:
         Tablero.tomarCarta(mazo)
+        if(Tablero.getUltimaCarta().getEfecto()=="Comodin" or Tablero.getUltimaCarta().getEfecto()=="Comodin +4"):
+            Tablero.tomarCarta(mazo)
         update = True
         turno = turno + 1
         if (update):

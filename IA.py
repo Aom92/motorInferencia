@@ -46,11 +46,11 @@ class IA(Jugador):
             #print(i)
             if(len(i)>0):
                 if(i[0].toString() == self.tablero.getUltimaCarta().toString()):
-                    print(self.tablero.getUltimaCarta().toString())
+                    #print(self.tablero.getUltimaCarta().toString())
                     inDeck=True
                     nuevoJuego.append(i)
 
-        print("Saliendo")
+        #print("Saliendo")
 
         if(inDeck == True):
             self.juegos = []
@@ -58,7 +58,7 @@ class IA(Jugador):
                 self.juegos.append(i)
         else:
             #return False
-            self.getPosibilities()
+            return False
             #self.actualizaPosibilidades()
             
 
@@ -73,22 +73,27 @@ class IA(Jugador):
         cont = 0
         numeros = []
         while(out == False):
-            r = random.randint(0,len(self.juegos)-1)
-            if(numeros.count(r)==0):
-                numeros.append(r)
-                juego = self.juegos[r]
-                cont = cont+1
-                if(len(self.juegos)!=0):
-                    carta = juego[0]
-                    for i in self.mano:
-                        if(i.toString() == carta.toString()):
-                            out = True
+            carta = None
+            if(len(self.juegos[0])<=3):
+                for i in self.juegos:
+                    if(len(i)>0):
+                        if(i[0].getEfecto() != ""):
+                            carta = i[0]
+            else:
+                r = random.randint(0,len(self.juegos)-1)
+                if(numeros.count(r)==0):
+                    numeros.append(r)
+                    juego = self.juegos[r]
+                    cont = cont+1
+                    if(len(self.juegos)!=0):
+                        carta = juego[0]
+                        for i in self.mano:
+                            if(i.toString() == carta.toString()):
+                                out = True
             out = jugadaValida([self.tablero.getPenultimaCarta(),self.tablero.getUltimaCarta(),carta])
-            print("Jugada:",out)
+            #print("Jugada:",out)
             if( cont >= len(self.juegos)):
                 return False
-
-        #print("{}:{}".format(carta.getColor(), carta.getValue()))
 
         nuevoJuego=[]
         for i in self.juegos:
@@ -106,7 +111,7 @@ class IA(Jugador):
         iter = 0
         for i in self.mano:
             if(i.toString()==carta.toString()):
-                print("Iter:",iter)
+                #print("Iter:",iter)
                 self.mano.pop(iter)
                 break
             iter = iter + 1
@@ -147,7 +152,7 @@ class IA(Jugador):
     def ifDejaMasCuatro(self):
         carta = False
         color = ""
-        if(self.contador <= 3):
+        if(self.contador <= 3 or self.actualizaPosibilidades() == False):
             iter = 0
             for i in self.mano:
                 if(i.getEfecto()=="Comodin +4"):
@@ -184,6 +189,30 @@ class IA(Jugador):
                     else:
                         color = self.mano[1].getColor()
                     break
+        elif(self.actualizaPosibilidades()==False):
+            iter = 0
+            for i in self.mano:
+                if i.getEfecto() == "Comodin":
+                    break
+                iter = iter + 1
+            if(iter < len(self.mano)):
+                carta =self.mano.pop(iter)
+                colors=[0,0,0,0]
+                for i in self.mano:
+                    if(i.getColor()=="Azul"):
+                        colors[0] = colors[0] + 1
+                    elif(i.getColor()=="Rojo"):
+                        colors[1] = colors[1] + 1
+                    elif(i.getColor()=="Amarillo"):
+                        colors[2] = colors[2] + 1
+                    else:
+                        colors[3] = colors[3] + 1
+                highest = 0
+                for i in range(1,3):
+                    if(colors[i]>colors[i-1]):
+                        highest = highest + 1
+                opciones=["Azul","Rojo","Amarillo","Verde"]
+                color = opciones[highest]
         
         return [carta,color]
                 
