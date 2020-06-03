@@ -10,7 +10,7 @@ estado = True
 update = False
 turno = 0
 
-
+"""Funcion encarga de mostrar los detalles del juego en el formato CLI"""
 def Draw(UNO,Tablero,IA,P1):
     #os.system("cls")
 
@@ -41,7 +41,16 @@ def Draw(UNO,Tablero,IA,P1):
 
     return 0
 
+"""
+
+Funcion encargada de coordinar el turno de la computadora
+Requiere de parametros el objeto IA (jugador CPU), tablero donde se juega y el mazo de 
+cartas todavia disponible
+
+"""
 def IAPiensa(IA,tablero, mazo):
+    #Empezamos checando que la carta jugada anteriormente no sea un comodin que salte el 
+    #juego del CPU o lo haga tomar cartas
     if(tablero.getUltimaCarta().getEfecto()=="+2"):
         IA.tomarCarta()
         IA.tomarCarta()
@@ -62,14 +71,19 @@ def IAPiensa(IA,tablero, mazo):
 
 
     else:
+        #Una vez checado que no hay comodin checamos si segun las ordenes de la computadora es conveniente dejar un
+        #comodin +4 en caso de tenerlo
         carta = IA.ifDejaMasCuatro()
         if(carta[0]==False):
 
+            #En caso de no dejar un +4 checamos lo mismo con un comodin de cambio de color
             carta = IA.ifDejaComodinColor()
 
             if(carta[0] == False):
 
+                #Buscamos que el CPU deje una carta siguiendo las reglas del juego
                 carta= IA.dejaCarta()
+                #En caso de no tener una el CPU tomara una carta hatsa que la jugada ya sea valida
                 while(carta==False):
                     print("IA TOMO UNA CARTA")
                     IA.tomarCarta()
@@ -81,6 +95,7 @@ def IAPiensa(IA,tablero, mazo):
 
             else:
 
+                #En caso de que si elejimos un comodin de cambio de color indicamos cual se jugo e indicamos a que color se cambio
                 print("Carta jugada = ",end="")
                 carta[0].mostrar()
                 tablero.recibeCarta(carta[0])
@@ -91,6 +106,7 @@ def IAPiensa(IA,tablero, mazo):
 
         else:
 
+            #En caso de que si elejimos un comodin +4 indicamos cual se jugo e indicamos a que color se cambio
             print("Carta jugada = ",end="")
             carta[0].mostrar()
             tablero.recibeCarta(carta[0])
@@ -99,7 +115,16 @@ def IAPiensa(IA,tablero, mazo):
             carta.mostrar()
 
 
+"""
+
+Funcion encargada de coordinar el turno del jugador
+Requiere de parametros el objeto IA (jugador CPU), tablero donde se juega y el mazo de 
+cartas todavia disponible
+
+"""
 def juegaJugador(jugador, tablero, mazo):
+    #Empezamos checando que la carta jugada anteriormente no sea un comodin que salte el 
+    #juego del jugador o lo haga tomar cartas
     if(tablero.getUltimaCarta().getEfecto=="+2"):
         for i in range(0,2):
             jugador.tomarCarta(mazo)
@@ -116,25 +141,31 @@ def juegaJugador(jugador, tablero, mazo):
     elif(tablero.getUltimaCarta().getEfecto()=="Reversa"):
         return 0
 
+    #En caso de que pueda jugar empezamos por preguntarle al usuario si quiere tomar una carta o jugar
     valido = False
     while(valido == False):
         P1.mostrarMano()
         yes = input("Va a tomar carta? [Y/n]\n$ ")
         carta = None
+        #En caso de tomar una carta se repite el proceso hasta que el jugador deje una
         while(yes == "Y" or yes == "y"):
             jugador.tomarCarta(mazo)
             P1.mostrarMano()
             yes = input("Va a tomar carta? [Y/n]\n$ ")
     
+        #En caso de no tomar carta se procede a que el usuario elija una
         jugador.mostrarMano()
         i = int(input("ingrese carta a dejar\n$ "))
+        #Buscamos que el valor de indice ingresado exista
         if(i >= len(jugador.getMano())):
             print("Numero ingresado erroneo")
             juegaJugador(jugador, tablero, mazo)
 
         carta = jugador.getCarta(i)
 
+        #Revisamos que no sea comodin la carta dejada, los comodines se pueden dejar sin importar del caso anterior
         if(carta.getEfecto() != "Comodin" and carta.getEfecto() != "Comodin +4" and tablero.getUltimaCarta() != "Comodin" and tablero.getUltimaCarta() != "Comodin +4"):
+            #Mediante el metodo jugadaValida que implementa PAT checamos que sea valida
             valido = jugadaValida([tablero.getPenultimaCarta(),tablero.getUltimaCarta(),carta])
             print(valido)
 
@@ -145,10 +176,12 @@ def juegaJugador(jugador, tablero, mazo):
             valido = True
 
 
+    #Ya que la jugada es valida la extraemos de la mano del usuario
     carta = jugador.dejaCarta(i)
     print(carta.toString())
     tablero.recibeCarta(carta)
 
+    #En caso de haber dejado un comodin +4 o cambio de color le pedimos al usuario que indique a que color cambia
     if(carta.getEfecto()=="Comodin" or carta.getEfecto()=="Comodin +4"):
         print("Escoja el color de la siguiente carta")
         opciones = ["Azul","Rojo","Amarillo","Verde"]
@@ -191,16 +224,26 @@ while ( estado ):
 
 
     #Logica del Juego
-
-    #while(len(P1.getMano())>0 and len(IA.getMano())>0):
+    #Inicia jugando el usuario
     turno = turno + 1
     juegaJugador(P1, Tablero, mazo)
     IA.setContador(len(P1.getMano()))
     IAPiensa(IA,Tablero,mazo)
+
+    #Por reglas del juego la computadora debe de indicar cuando le queda una sola carta
     UNO=False
     if(len(IA.getMano())==1):
         UNO=True
+
+    
     Draw(UNO,Tablero,IA,P1)
+
+    if(len(IA.getMano())==0):
+        print("Lo sentimos, gano la computadora")
+        estado = False
+    if(len(P1.getMano())==0):
+        print("Felicidades, usted ("+P1.getName()+") a ganado")
+        estado = False
 
     
 

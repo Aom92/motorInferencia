@@ -7,6 +7,7 @@ class Mazo:
     def __init__(self):
         self.cartas = []
         self.generar()
+        
     """
     Genera un nuevo deck de UNO con 108 Cartas de 4 Colores
     """

@@ -9,38 +9,46 @@ class IA(Jugador):
 
     def __init__(self, nombre,mazo, tablero):
         self.nombre = nombre
-        self.mano = []
-        self.cartas = mazo.cartas
-        self.mazo = mazo
-        self.posibilidades = Posibilidades()
-        self.arbol = ArbolDecision()
-        self.tablero = tablero
-        self.juegos = []
+        self.mano = []                          #Mano de la computadora
+        self.cartas = mazo.cartas               #Conjunto de cartas no jugadas y que no posee el CPU con el cual se verán las posibilidades
+        self.mazo = mazo                        #Objeto mazo para usar posteriormente
+        self.posibilidades = Posibilidades()    #Objeto manejador de posibilidades
+        self.arbol = ArbolDecision()            #Objeto manejador del arbol de decisiones
+        self.tablero = tablero                  #Tablero en que se juega 
+        self.juegos = []                        #Manejador de posibles juegos
         self.contador = 0
     
+    """Metodo encargado de tomar una carta del mazo"""
     def tomarCarta(self):
         self.mano.append(self.mazo.tomarCarta())
+        #Buscamos borrar del conjunto de cartas no jugado las cartas que posee el CPU
         for i in self.mano:
             for j in self.cartas:
                 if(j.toString()==i.toString()):
                     self.cartas.pop(self.cartas.index(j))
 
+    """Getter de la mano de la CPU"""
     def getMano(self):
         return self.mano
 
+    """Metodo encargado de recibir una carta, no del mazo"""
     def recibeCarta(self,carta):
         self.mano.append(carta)
     
+    """Metodo encargado de actualizar los juegos posibles a futuro e indicar si todavia posibilidades calculadas"""
     def actualizaPosibilidades(self):
         #tam=0
         inDeck=False
 
+        #Eliminamos la ultima carta jugada del conjunto de cartas posibles
         iter = 0
         for i in self.cartas:
             if(i.toString() == self.tablero.getUltimaCarta().toString()):
                 self.cartas.pop(iter)
             iter = iter + 1
 
+        #Checamos que la carta jugada se encuentre dentro de las posibilidades calculadas
+        #De ser asi agregamos dichas posibilidades en la lista de nuevas posibilidades
         nuevoJuego=[] 
         for i in self.juegos:
             #print(i)
@@ -52,18 +60,21 @@ class IA(Jugador):
 
         #print("Saliendo")
 
+        #Si si se hay posibilidades las actualizamos
         if(inDeck == True):
             self.juegos = []
             for i in nuevoJuego:
                 self.juegos.append(i)
         else:
+            #Sino indicamos que no hay
             #return False
             return False
             #self.actualizaPosibilidades()
             
 
-
+    """Funcion encargada de dejar la siguiente carta"""
     def dejaCarta(self):        
+        #Obtenemos las posibilidades (Siempre se ven n turnos a futuro)
         self.getPosibilities()
         if(len(self.juegos)==0):
             self.actualizaPosibilidades()
@@ -120,13 +131,16 @@ class IA(Jugador):
 
         return carta
 
+    """Metodo encargado de mostrar la mano de la computadora (usado para depuracion)"""
     def mostrarMano(self):
         for carta in self.mano:
             carta.mostrar()
 
+    """Getter del atributo Nombre"""
     def getName(self):
         return self.nombre
 
+    """Funcion encargada de obtener todos los posibles juegos"""
     def getPosibilities(self):
         self.juegos = []
         self.arbol.setRoot(self.tablero.mano[len(self.tablero.mano)-1])
@@ -149,10 +163,11 @@ class IA(Jugador):
             if(len(i)>0):
                 i.pop(0)
 
+    """Funcion encargada de ver si es un momento optimo para dejar un comodin +4"""
     def ifDejaMasCuatro(self):
         carta = False
         color = ""
-        if(self.contador <= 3 or self.actualizaPosibilidades() == False):
+        if(self.contador < 3 or self.actualizaPosibilidades() == False):
             iter = 0
             for i in self.mano:
                 if(i.getEfecto()=="Comodin +4"):
@@ -177,6 +192,7 @@ class IA(Jugador):
                 iter = iter + 1
         return [carta,color]
 
+    """Funcion encargada de ver si es un momento optimo para dejar un comodin cambio de color"""
     def ifDejaComodinColor(self):
         carta = False
         color = ""
@@ -216,7 +232,7 @@ class IA(Jugador):
         
         return [carta,color]
                 
-
+    """Funcion encargada de actualizar el contador de cartas del juego"""
     def setContador(self, cont):
         self.contador = cont
 

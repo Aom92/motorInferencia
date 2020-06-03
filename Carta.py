@@ -10,9 +10,7 @@ class Carta:
         self.color = color
         self.efecto = efecto
     
-    """
-    Imprime los atributos de la carta.
-    """
+    """Imprime los atributos de la carta"""
     def mostrar(self):
         if(self.efecto == ""):
              print("{} de color {}".format(self.numero,self.color))
@@ -22,15 +20,19 @@ class Carta:
             else:
                 print("{} de color {}".format(self.efecto, self.color))
 
+    """Getter del atributo Efecto de la carta"""
     def getEfecto(self):
         return self.efecto
 
+    """Getter del atributo Color de la carta"""
     def getColor(self):
         return self.color
 
+    """Getter del atributo Numerico de la carta"""
     def getValue(self):
         return self.numero
 
+    """Metodo encargado de pasar a texto los atributos de la carta"""
     def toString(self):
         if(self.efecto!=""):
             return "{}:{}".format(self.efecto,self.color)

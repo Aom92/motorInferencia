@@ -4,11 +4,21 @@ from Stack import Stack
 from Carta import Carta
 import copy
 
+
+"""
+
+Funcion encargada de pasar una lista de cartas a una lista de premisas legibles para el proceso del PAT
+Su parametro es la lista a modificar
+Retorna las listas de antecedente y consecuente legibles para el PAT
+
+"""
 def traductorColor(listaCartas):
     left = []
+    #Itermanos la lista
     for i in range(0,3):
         color = ""
         numero = ""
+        #Checamos color
         if(listaCartas[i].getColor()=="Azul"):
             color = "B"
         elif(listaCartas[i].getColor()=="Rojo"):
@@ -18,9 +28,11 @@ def traductorColor(listaCartas):
         else:
             color = "G"
 
+        #Si no tiene color le ponemos una E de efecto
         if(listaCartas[i].getEfecto()!=""):
             numero="E"
         else:
+            #Si no tiene valor numerico ni color ponemos una C de comodin
             if(listaCartas[i].getValue()==""):
                 numero="C"
             else:
@@ -31,6 +43,7 @@ def traductorColor(listaCartas):
         else:
             left.append("("+color+"^"+numero+")")
 
+    #Creamos el antecedente y consecuente para probar el principio de transitividad
     toReturnRight=[] 
     toReturnRight.append(left[0]+">"+left[2])
     toReturnLeft = []
@@ -43,11 +56,20 @@ def traductorColor(listaCartas):
 
     return [toReturnLeft,toReturnRight]
 
+"""
+
+Funcion encargada de pasar una lista de cartas a una lista de premisas legibles para el proceso del PAT
+Su parametro es la lista a modificar
+Retorna las listas de antecedente y consecuente legibles para el PAT
+
+"""
 def traductorNumero(listaCartas):
     left = []
+    #Itermanos la lista
     for i in range(0,3):
         color = ""
         numero = ""
+        #Checamos color
         if(listaCartas[i].getColor()=="Azul"):
             color = "B"
         elif(listaCartas[i].getColor()=="Rojo"):
@@ -57,19 +79,23 @@ def traductorNumero(listaCartas):
         else:
             color = "G"
 
+        #Si no tiene color le ponemos una E de efecto
         if(listaCartas[i].getEfecto()!=""):
             numero="E"
         else:
+            #Si no tiene valor numerico ni color ponemos una C de comodin
             if(listaCartas[i].getValue()==""):
                 numero="C"
             else:
                 numero = ""+str(listaCartas[i].getValue())
         
+        #Ingresamos las premisas en antecedente
         if(i<2):
             left.append(numero)
         else:
             left.append("("+color+"^"+numero+")")
 
+    #Creamos el antecedente y consecuente para probar el principio de transitividad
     toReturnRight=[] 
     toReturnRight.append(left[0]+">"+left[2])
     toReturnLeft = []
@@ -80,12 +106,16 @@ def traductorNumero(listaCartas):
     #print(toReturnLeft)
     #print(toReturnRight)
 
+    #Retornamos antecedente y consecuente en una lista
     return [toReturnLeft,toReturnRight]
 
 """
-    @brief Funcion que evalua una expresion del antecedentes del metodo de Prueba automatica de teoremas
-    @param La expresion a evaluar, el indice donde se encuentra dicha expresion y la pila donde se encuentran las evaluaciones
-    @return Checar si si es necesario
+
+    Funcion que evalua una expresion del antecedentes del metodo de Prueba automatica de teoremas
+    Sus parametros son: la expresion a evaluar, el indice donde se encuentra dicha expresion 
+    y la pila donde se encuentran las evaluaciones
+    Retorna la pila modificada
+
 """
 def evaluacionIzquierda(expresion, indice, stack):
 
@@ -101,6 +131,7 @@ def evaluacionIzquierda(expresion, indice, stack):
     #Obtenemos los elementos de la expresion [lado izquierdo, operacion, lado derecho]
     elements=getElementsPrefix(expresion)
     if(elements[0]=='^'):
+        #Caso de operador AND en antecedente
         cambio=stack.pop()
         cambio[0].pop(indice)
         cambio[0].append(elements[1])
@@ -109,6 +140,7 @@ def evaluacionIzquierda(expresion, indice, stack):
         return stack
 
     elif(elements[0]=='v'):
+        #Caso de operador OR en antecedente
         tupla1=stack.pop()
         tupla1[0].pop(indice)
         tupla2=copy.deepcopy(tupla1)
@@ -125,6 +157,7 @@ def evaluacionIzquierda(expresion, indice, stack):
         return stack
 
     elif(elements[0]=='>'):
+        #Caso de operador IF en antecedente
         tupla1=stack.pop()
         tupla1[0].pop(indice)
         tupla2=copy.deepcopy(tupla1)
@@ -141,9 +174,10 @@ def evaluacionIzquierda(expresion, indice, stack):
         return stack
 
 """
-    #@brief Funcion que evalua una expresion del consecuente del metodo de Prueba automatica de teoremas
-    #@param La expresion a evaluar, el indice donde se encuentra dicha expresion y la pila donde se encuentran las evaluaciones
-    #@return Checar si si es necesario
+    Funcion que evalua una expresion del consecuente del metodo de Prueba automatica de teoremas
+    Sus parametros son: la expresion a evaluar, el indice donde se encuentra dicha expresion
+    y la pila donde se encuentran las evaluaciones
+    Retorna la pila modificada 
 """
 def evaluacionDerecha(expresion, indice, stack):
     #print(expresion)
@@ -156,8 +190,9 @@ def evaluacionDerecha(expresion, indice, stack):
         stack.push(cambio)
         return stack
 
-    #Obtenemos los elementos de la expresion [lado izquierdo, operacion, lado derecho]
+    #Obtenemos los elementos de la expresion [operacion, lado izquierdo, lado derecho]
     elements=getElementsPrefix(expresion)
+    #Caso de encontrar un operador and en consecuente
     if(elements[0]=='^'):
         tupla1=stack.pop()
         tupla1[1].pop(indice)
@@ -165,7 +200,7 @@ def evaluacionDerecha(expresion, indice, stack):
 
         stack.push(tupla1)
         cambio1=stack.pop()
-        cambio1[1].append(elements[2]) #element[0] checar
+        cambio1[1].append(elements[2]) 
 
         stack.push(cambio1)
 
@@ -176,6 +211,7 @@ def evaluacionDerecha(expresion, indice, stack):
         return stack
 
     elif(elements[0]=='v'):
+        #Caso de encontrar un operador or en consecuente
         cambio=stack.pop()
         cambio[1].pop(indice)
         cambio[1].append(elements[1])
@@ -184,6 +220,7 @@ def evaluacionDerecha(expresion, indice, stack):
         return stack
 
     elif(elements[0]=='>'):
+        #Caso de encontrar un operador if en consecuente
         cambio=stack.pop()
         cambio[1].pop(indice)
         cambio[0].append(elements[1])
@@ -193,9 +230,10 @@ def evaluacionDerecha(expresion, indice, stack):
 
 """
 
-    #@brief Funcion que se encarga de ir enviando las distintas expresiones a sus respectivas evaluaciones hasta que todas sean atomicas
-    #@param La pila que contiene el proceso de evaluacion
-    #@return El valor retornado al checar si es valido
+    Funcion que se encarga de ir enviando las distintas expresiones a sus respectivas evaluaciones hasta que todas sean atomicas
+    Sus parametros son: la pila que contiene el proceso de evaluacion
+    Retorna el valor retornado al checar si es valido
+
 """
 def evaluarExpresion(stack):
     expresionesFinales=[]
@@ -237,9 +275,11 @@ def evaluarExpresion(stack):
     return checarSiValido(expresionesFinales)
 
 """
-    @brief Funcion que checa si todas las premisas resultantes son acciomas
-    @param Una lista con todas las expresiones resultantes de la evaluacion
-    @return Por el momento una cadena diciendo si es valido o no la operacion logica
+
+    Funcion que checa si todas las premisas resultantes son acciomas
+    Sus parametros son una lista con todas las expresiones resultantes de la evaluacion
+    Retorna un valor booleano indicando si es o no valida la expresion
+
 """
 def checarSiValido(expresiones):
     #print(len(expresiones))
@@ -297,29 +337,41 @@ def checarSiValido(expresiones):
     else:
         return False
 
+"""
+
+Funcion activadora del resto de las funciones del archivo
+Metodo encargado de checar si la jugada recibida es valida
+Retorna si la jugada es valida
+
+"""
 def jugadaValida(listaCartas):
+
+    #Hacemos dos chequeos: chequeo de validez por color y chequeo por número
 
     infixToPrefixArrayLeft=[]
     infixToPrefixArrayRight=[]
-    #Hacemos dos chequeos: chequeo por color y chequeo por número
+    #Traducimos la lista de cartas a cadenas, enfocandonos en el color de las cartas, y las pasamos de infix a prefix
     listaColor = traductorColor(listaCartas)
     for x in listaColor[0]:
         infixToPrefixArrayLeft.append(infixToPrefix(x))
     for x in listaColor[1]:
         infixToPrefixArrayRight.append(infixToPrefix(x))
     stackColor = Stack()
+    #Operamos dichas cadenas para ver si son validas
     stackColor.push([infixToPrefixArrayLeft,infixToPrefixArrayRight])
     validoColor = evaluarExpresion(stackColor)
     del stackColor
 
     infixToPrefixArrayLeft=[]
     infixToPrefixArrayRight=[]
+    #Traducimos la lista de cartas a cadenas, enfocandonos en el numero de las cartas, y las pasamos de infix a prefix
     listaNumero = traductorNumero(listaCartas)
     for x in listaNumero[0]:
         infixToPrefixArrayLeft.append(infixToPrefix(x))
     for x in listaNumero[1]:
         infixToPrefixArrayRight.append(infixToPrefix(x))
     stackNumero = Stack()
+    #Operamos dichas cadenas para ver si son validas
     stackNumero.push([infixToPrefixArrayLeft,infixToPrefixArrayRight])
     validoNumero = evaluarExpresion(stackNumero)
     del stackNumero
@@ -327,6 +379,8 @@ def jugadaValida(listaCartas):
     #print("Color",validoColor)
     #print("Numero",validoNumero)
 
+    #En caso de que el proceso de transitividad sea valido, ya sea por el color de las cartas o el valor numerico
+    #Contamos el juego como valido
     if(validoColor == True or validoNumero == True):
         return True
     else:
