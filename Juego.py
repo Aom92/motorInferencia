@@ -56,6 +56,10 @@ def IAPiensa(IA,tablero, mazo):
     elif(tablero.getUltimaCarta().getEfecto()=="Salto"):
         return 0
 
+    elif(tablero.getUltimaCarta().getEfecto()=="Reversa"):
+        return 0
+
+
     else:
         carta = IA.ifDejaMasCuatro()
         if(carta[0]==False):
@@ -66,7 +70,9 @@ def IAPiensa(IA,tablero, mazo):
 
                 carta= IA.dejaCarta()
                 while(carta==False):
+                    print("IA TOMO UNA CORTO")
                     IA.tomarCarta()
+                    IA.mostrarMano()
                     carta= IA.dejaCarta()
                 tablero.recibeCarta(carta)
                 print("Carta jugada = ",end="")
