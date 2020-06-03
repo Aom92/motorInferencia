@@ -110,7 +110,7 @@ def juegaJugador(jugador, tablero, mazo):
             jugador.tomarCarta(mazo)
         return
 
-    elif(tablero.getUltimaCarta().getEfecto=="Salto"):
+    elif(tablero.getUltimaCarta().getEfecto()=="Salto"):
         return
 
     elif(tablero.getUltimaCarta().getEfecto()=="Reversa"):
