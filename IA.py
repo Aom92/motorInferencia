@@ -26,6 +26,7 @@ class IA(Jugador):
             for j in self.cartas:
                 if(j.toString()==i.toString()):
                     self.cartas.pop(self.cartas.index(j))
+        self.getPosibilities()
 
     """Getter de la mano de la CPU"""
     def getMano(self):
@@ -76,28 +77,37 @@ class IA(Jugador):
     def dejaCarta(self):        
         #Obtenemos las posibilidades (Siempre se ven n turnos a futuro)
         self.getPosibilities()
+        print("Falg 1")
         #Si por algun motivo no hay jugadas y tras actualizar siguen sin haber posibles retornamos que no hay carta a dejar
         if(len(self.juegos)==0):
             self.actualizaPosibilidades()
         if(len(self.juegos)==0):
                 return False
         
+        print("Flag 2")
         #Checamos entre las mejores jugadas y elejimos un juego al azar
         out = False
         cont = 0
         numeros = []
-        while(out == False):
-            carta = None
-            #Si quedan pocos juegos le damos prioridad a los comodines
-            if(len(self.juegos[0])<=3):
-                for i in self.juegos:
-                    if(len(i)>0):
-                        if(i[0].getEfecto() != "" and i[0].getColor()==""):
-                            carta = i[0]
-            else:
+        carta = None
+
+        #Si quedan pocos juegos le damos prioridad a los comodines
+        if(len(self.juegos[0])<=1):
+            for i in self.juegos:
+                #print("Flag 3")
+                if(len(i)>0):
+                    if(i[0].getEfecto() != "" and (i[0].getColor()=="" or i[0].getColor() == self.tablero.getUltimaCarta().getColor())):
+                        print("Flag 4")
+                        carta = i[0]
+                        out = True
+                        break
+        else:
+            while(out == False):
+                carta = None
                 #Si no agarramos una de entre todas las cartas
                 r = random.randint(0,len(self.juegos)-1)
                 if(numeros.count(r)==0):
+                    print(r)
                     numeros.append(r)
                     #Obtenemos el r-esimo juego y su primera carta
                     juego = self.juegos[r]
@@ -109,17 +119,20 @@ class IA(Jugador):
                             if(i.toString() == carta.toString()):
                                 out = jugadaValida([self.tablero.getPenultimaCarta(),self.tablero.getUltimaCarta(),carta])
                                 break
-            #print("Jugada:",out)
-            #Igualmente checamos que no hayamos intentado ya con todas las posibilidades que hay
-            if( cont >= len(self.juegos)):
-                return False
+                print("Jugada:",out)
+                #Igualmente checamos que no hayamos intentado ya con todas las posibilidades que hay
+                if( cont >= len(self.juegos)):
+                    return False
+
+        print("Saliendo")
 
         #Ya que el juego es valido obtenemos todos los juegos que contienen esa carta en dicho paso
         nuevoJuego=[]
         for i in self.juegos:
-            if(i[0].toString() == carta.toString()):
-                i.pop(0)
-                nuevoJuego.append(i)
+            if(len(i)>0):
+                if(i[0].toString() == carta.toString()):
+                    i.pop(0)
+                    nuevoJuego.append(i)
 
         #Actualizamos la lista de juegos
         self.juegos=[]
@@ -173,6 +186,8 @@ class IA(Jugador):
         for i in self.juegos:
             if(len(i)>0):
                 i.pop(0)
+
+        #print("Juegos:",self.juegos)
 
     """Funcion encargada de ver si es un momento optimo para dejar un comodin +4"""
     def ifDejaMasCuatro(self):
