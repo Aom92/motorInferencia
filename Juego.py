@@ -54,6 +54,8 @@ def IAPiensa(IA,tablero, mazo):
     if(tablero.getUltimaCarta().getEfecto()=="+2"):
         IA.tomarCarta()
         IA.tomarCarta()
+        
+        
         return 0
 
     elif(tablero.getUltimaCarta().getEfecto()=="Comodin +4"):
@@ -110,9 +112,9 @@ def IAPiensa(IA,tablero, mazo):
             print("Carta jugada = ",end="")
             carta[0].mostrar()
             tablero.recibeCarta(carta[0])
-            tablero.recibeCarta(Carta("",carta[1],""))
+            tablero.recibeCarta(Carta("",carta[1],carta[0].getEfecto() )) #
             print("Carta jugada = ",end="")
-            carta.mostrar()
+            carta[0].mostrar()
 
 
 """
@@ -125,12 +127,12 @@ cartas todavia disponible
 def juegaJugador(jugador, tablero, mazo):
     #Empezamos checando que la carta jugada anteriormente no sea un comodin que salte el 
     #juego del jugador o lo haga tomar cartas
-    if(tablero.getUltimaCarta().getEfecto=="+2"):
+    if(tablero.getUltimaCarta().getEfecto()=="+2"):
         for i in range(0,2):
             jugador.tomarCarta(mazo)
         return
 
-    elif(tablero.getUltimaCarta().getEfecto=="Comodin +4"):
+    elif(tablero.getUltimaCarta().getEfecto()=="Comodin +4"):
         for i in range(0,4):
             jugador.tomarCarta(mazo)
         return
@@ -190,8 +192,9 @@ def juegaJugador(jugador, tablero, mazo):
             print(str(iter)+")"+ i)
             iter = iter + 1
         i = int(input("Ingrese numero correspondiente al color\n$ "))
-        nuevaCarta = Carta("",opciones[i],"")
+        nuevaCarta = Carta("",opciones[i], carta.getEfecto())
         tablero.recibeCarta(nuevaCarta)
+        
 
 while ( estado ):
 

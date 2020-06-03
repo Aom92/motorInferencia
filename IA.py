@@ -2,6 +2,7 @@ from Jugador import Jugador
 from posibilidades import Posibilidades
 from arbolDecision import ArbolDecision
 from PAT import jugadaValida
+from Carta import Carta
 import random
 
 
@@ -84,7 +85,7 @@ class IA(Jugador):
         cont = 0
         numeros = []
         while(out == False):
-            carta = None
+            carta = Carta("","","")
             if(len(self.juegos[0])<=3):
                 for i in self.juegos:
                     if(len(i)>0):
