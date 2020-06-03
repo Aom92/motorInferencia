@@ -1,8 +1,78 @@
 from infixToPrefix import infixToPrefix
 from ElementGetter import getElementsPrefix, getElements
 from Stack import Stack
+from Carta import Carta
 import copy
 
+def traductorColor(listaCartas):
+    left = []
+    for i in range(0,3):
+        color = ""
+        numero = ""
+        if(listaCartas[i].getColor()=="Azul"):
+            color = "B"
+        elif(listaCartas[i].getColor()=="Rojo"):
+            color = "R"
+        elif(listaCartas[i].getColor()=="Amarillo"):
+            color = "Y"
+        else:
+            color = "G"
+        numero = ""+str(listaCartas[i].getValue())
+        
+        if(i<2):
+            left.append(color)
+        else:
+            left.append("("+color+"^"+numero+")")
+
+    toReturnRight=[] 
+    toReturnRight.append(left[0]+">"+left[2])
+    toReturnLeft = []
+    toReturnLeft.append(left[0]+">"+left[1])
+    expresion = left[2]
+    toReturnLeft.append(expresion[1]+">"+expresion)
+
+    print(toReturnLeft)
+    print(toReturnRight)
+
+    return [toReturnLeft,toReturnRight]
+
+def traductorNumero(listaCartas):
+    left = []
+    for i in range(0,3):
+        color = ""
+        numero = ""
+        if(listaCartas[i].getColor()=="Azul"):
+            color = "B"
+        elif(listaCartas[i].getColor()=="Rojo"):
+            color = "R"
+        elif(listaCartas[i].getColor()=="Amarillo"):
+            color = "Y"
+        else:
+            color = "G"
+        numero = ""+str(listaCartas[i].getValue())
+        
+        if(i<2):
+            left.append(numero)
+        else:
+            left.append("("+color+"^"+numero+")")
+
+    toReturnRight=[] 
+    toReturnRight.append(left[0]+">"+left[2])
+    toReturnLeft = []
+    toReturnLeft.append(left[0]+">"+left[1])
+    expresion = left[2]
+    toReturnLeft.append(expresion[3]+">"+expresion)
+
+    print(toReturnLeft)
+    print(toReturnRight)
+
+    return [toReturnLeft,toReturnRight]
+
+"""
+    @brief Funcion que evalua una expresion del antecedentes del metodo de Prueba automatica de teoremas
+    @param La expresion a evaluar, el indice donde se encuentra dicha expresion y la pila donde se encuentran las evaluaciones
+    @return Checar si si es necesario
+"""
 def evaluacionIzquierda(expresion, indice, stack):
 
     #print(expresion)
@@ -209,39 +279,73 @@ def checarSiValido(expresiones):
 
     #Si todas son aciomas indicamos que las premisas y conclusion son validas
     if((len(axiomas) == len(expresiones)) and (axiomas.count(False)<=0)):
-        return 'es valida'
+        return True
     else:
-        return 'es invalida'
+        return False
+
+def jugadaValida(listaCartas):
+
+    infixToPrefixArrayLeft=[]
+    infixToPrefixArrayRight=[]
+    #Hacemos dos chequeos: chequeo por color y chequeo por número
+    listaColor = traductorColor(listaCartas)
+    for x in listaColor[0]:
+        infixToPrefixArrayLeft.append(infixToPrefix(x))
+    for x in listaColor[1]:
+        infixToPrefixArrayRight.append(infixToPrefix(x))
+    stackColor = Stack()
+    stackColor.push([infixToPrefixArrayLeft,infixToPrefixArrayRight])
+    validoColor = evaluarExpresion(stackColor)
+    del stackColor
+
+    infixToPrefixArrayLeft=[]
+    infixToPrefixArrayRight=[]
+    listaNumero = traductorNumero(listaCartas)
+    for x in listaNumero[0]:
+        infixToPrefixArrayLeft.append(infixToPrefix(x))
+    for x in listaNumero[1]:
+        infixToPrefixArrayRight.append(infixToPrefix(x))
+    stackNumero = Stack()
+    stackNumero.push([infixToPrefixArrayLeft,infixToPrefixArrayRight])
+    validoNumero = evaluarExpresion(stackNumero)
+    del stackNumero
+
+    print("Color",validoColor)
+    print("Numero",validoNumero)
+
+    if(validoColor == True or validoNumero == True):
+        return True
 
 
-stack = Stack()
+if __name__ == "__main__":
+    stack = Stack()
 
-#Posibles expresiones prueba
-left = ["((PvQ)>(!P^Q))^(P>Q)"]
-right = ["!P"]
-#left=["!A>B","B>!C","Av!D","CvD"]
-#right=["A"]
-#left = ["(PvQ)>R","!P>S","!Q>U","!R","V>(!U^!S)"]
-#right = ["!V"]
+    #Posibles expresiones prueba
+    left = ["((PvQ)>(!P^Q))^(P>Q)"]
+    right = ["!P"]
+    #left=["!A>B","B>!C","Av!D","CvD"]
+    #right=["A"]
+    #left = ["(PvQ)>R","!P>S","!Q>U","!R","V>(!U^!S)"]
+    #right = ["!V"]
 
-infixToPrefixArrayLeft = []
-infixToPrefixArrayRight = []
-evaluaciones = []
+    infixToPrefixArrayLeft = []
+    infixToPrefixArrayRight = []
+    evaluaciones = []
 
-print(left,end='')
-print("=>",end='')
-print(right)
-print()
+    print(left,end='')
+    print("=>",end='')
+    print(right)
+    print()
 
-for x in left:
-    infixToPrefixArrayLeft.append(infixToPrefix(x))
+    for x in left:
+        infixToPrefixArrayLeft.append(infixToPrefix(x))
 
-for x in right:
-    infixToPrefixArrayRight.append(infixToPrefix(x))
+    for x in right:
+        infixToPrefixArrayRight.append(infixToPrefix(x))
 
-stack.push([infixToPrefixArrayLeft,infixToPrefixArrayRight])
+    stack.push([infixToPrefixArrayLeft,infixToPrefixArrayRight])
 
-print('\nSu expresion logica '+evaluarExpresion(stack))
+    print('\nSu expresion logica '+evaluarExpresion(stack))
 
 
 

@@ -33,6 +33,9 @@ class Jugador:
 
     def getUltimaCarta(self):
         return self.mano[len(self.mano)-1]
+
+    def getPenultimaCarta(self):
+        return self.mano[len(self.mano)-2]
         
 
 

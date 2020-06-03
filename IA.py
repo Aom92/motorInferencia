@@ -1,6 +1,7 @@
 from Jugador import Jugador
 from posibilidades import Posibilidades
 from arbolDecision import ArbolDecision
+from PAT import jugadaValida
 import random
 
 
@@ -82,11 +83,12 @@ class IA(Jugador):
                     for i in self.mano:
                         if(i.toString() == carta.toString()):
                             out = True
+            out = jugadaValida([self.tablero.getPenultimaCarta(),self.tablero.getUltimaCarta(),carta])
+            print("Jugada:",out)
             if( cont >= len(self.juegos)):
                 return False
 
         #print("{}:{}".format(carta.getColor(), carta.getValue()))
-
 
         nuevoJuego=[]
         for i in self.juegos:
