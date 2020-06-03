@@ -51,16 +51,14 @@ cartas todavia disponible
 """
 def IAPiensa(IA,tablero, mazo):
 
-    global turno
     global tiro
+    
 
     #Empezamos checando que la carta jugada anteriormente no sea un comodin que salte el 
     #juego del CPU o lo haga tomar cartas
     if(tablero.getUltimaCarta().getEfecto()=="+2"):
-        IA.tomarCarta()
-        IA.tomarCarta()
-        
-        
+        IA.tomarCarta(mazo)
+        IA.tomarCarta(mazo)
         return 0
 
     elif(tablero.getPenultimaCarta().getEfecto()=="Comodin +4" and tiro=="jugador"):
@@ -142,7 +140,7 @@ def juegaJugador(jugador, tablero, mazo):
             jugador.tomarCarta(mazo)
         return
 
-    elif(tablero.getUltimaCarta().getEfecto()=="Comodin +4"):
+    elif(tablero.getPenultimaCarta().getEfecto()=="Comodin +4" and tiro=="IA"):
         for i in range(0,4):
             jugador.tomarCarta(mazo)
         return
@@ -203,7 +201,7 @@ def juegaJugador(jugador, tablero, mazo):
             print(str(iter)+")"+ i)
             iter = iter + 1
         i = int(input("Ingrese numero correspondiente al color\n$ "))
-        nuevaCarta = Carta("",opciones[i], carta.getEfecto())
+        nuevaCarta = Carta("",opciones[i], "")
         tablero.recibeCarta(nuevaCarta)
         
 
