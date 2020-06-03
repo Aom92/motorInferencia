@@ -56,7 +56,7 @@ def IAPiensa(IA,tablero, mazo):
 
     #Empezamos checando que la carta jugada anteriormente no sea un comodin que salte el 
     #juego del CPU o lo haga tomar cartas
-    if(tablero.getUltimaCarta().getEfecto()=="+2"):
+    if(tablero.getUltimaCarta().getEfecto()=="+2" and tiro=="jugador"):
         IA.tomarCarta(mazo)
         IA.tomarCarta(mazo)
         return 0
@@ -136,7 +136,7 @@ def juegaJugador(jugador, tablero, mazo):
 
     #Empezamos checando que la carta jugada anteriormente no sea un comodin que salte el 
     #juego del jugador o lo haga tomar cartas
-    if(tablero.getUltimaCarta().getEfecto()=="+2"):
+    if(tablero.getUltimaCarta().getEfecto()=="+2" and tiro == "IA"):
         for i in range(0,2):
             jugador.tomarCarta(mazo)
         return
