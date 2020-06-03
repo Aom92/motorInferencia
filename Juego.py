@@ -9,6 +9,7 @@ import os
 estado = True
 update = False
 turno = 0
+tiro = ""
 
 """Funcion encarga de mostrar los detalles del juego en el formato CLI"""
 def Draw(UNO,Tablero,IA,P1):
@@ -49,6 +50,10 @@ cartas todavia disponible
 
 """
 def IAPiensa(IA,tablero, mazo):
+
+    global turno
+    global tiro
+
     #Empezamos checando que la carta jugada anteriormente no sea un comodin que salte el 
     #juego del CPU o lo haga tomar cartas
     if(tablero.getUltimaCarta().getEfecto()=="+2"):
@@ -58,17 +63,17 @@ def IAPiensa(IA,tablero, mazo):
         
         return 0
 
-    elif(tablero.getUltimaCarta().getEfecto()=="Comodin +4"):
-        IA.tomarCarta()
-        IA.tomarCarta()
-        IA.tomarCarta()
-        IA.tomarCarta()
+    elif(tablero.getPenultimaCarta().getEfecto()=="Comodin +4" and tiro=="jugador"):
+        IA.tomarCarta(mazo)
+        IA.tomarCarta(mazo)
+        IA.tomarCarta(mazo)
+        IA.tomarCarta(mazo)
         return 0
 
-    elif(tablero.getUltimaCarta().getEfecto()=="Salto"):
+    elif(tablero.getUltimaCarta().getEfecto()=="Salto" and tiro=="jugador"):
         return 0
 
-    elif(tablero.getUltimaCarta().getEfecto()=="Reversa"):
+    elif(tablero.getUltimaCarta().getEfecto()=="Reversa" and tiro=="jugador"):
         return 0
 
 
@@ -88,7 +93,7 @@ def IAPiensa(IA,tablero, mazo):
                 #En caso de no tener una el CPU tomara una carta hatsa que la jugada ya sea valida
                 while(carta==False):
                     print("IA TOMO UNA CARTA")
-                    IA.tomarCarta()
+                    IA.tomarCarta(mazo)
                     IA.mostrarMano()
                     carta= IA.dejaCarta()
                 tablero.recibeCarta(carta)
@@ -112,9 +117,11 @@ def IAPiensa(IA,tablero, mazo):
             print("Carta jugada = ",end="")
             carta[0].mostrar()
             tablero.recibeCarta(carta[0])
-            tablero.recibeCarta(Carta("",carta[1],carta[0].getEfecto() )) #
+            nuevaCarta = Carta("",carta[1],"")
+            tablero.recibeCarta(nuevaCarta)
             print("Carta jugada = ",end="")
-            carta[0].mostrar()
+            nuevaCarta.mostrar()
+    tiro="IA"
 
 
 """
@@ -125,6 +132,9 @@ cartas todavia disponible
 
 """
 def juegaJugador(jugador, tablero, mazo):
+
+    global tiro
+
     #Empezamos checando que la carta jugada anteriormente no sea un comodin que salte el 
     #juego del jugador o lo haga tomar cartas
     if(tablero.getUltimaCarta().getEfecto()=="+2"):
@@ -137,10 +147,10 @@ def juegaJugador(jugador, tablero, mazo):
             jugador.tomarCarta(mazo)
         return
 
-    elif(tablero.getUltimaCarta().getEfecto()=="Salto"):
+    elif(tablero.getUltimaCarta().getEfecto()=="Salto" and tiro=="IA"):
         return
 
-    elif(tablero.getUltimaCarta().getEfecto()=="Reversa"):
+    elif(tablero.getUltimaCarta().getEfecto()=="Reversa" and tiro=="IA"):
         return 0
 
     #En caso de que pueda jugar empezamos por preguntarle al usuario si quiere tomar una carta o jugar
@@ -182,6 +192,7 @@ def juegaJugador(jugador, tablero, mazo):
     carta = jugador.dejaCarta(i)
     print(carta.toString())
     tablero.recibeCarta(carta)
+    tiro="jugador"
 
     #En caso de haber dejado un comodin +4 o cambio de color le pedimos al usuario que indique a que color cambia
     if(carta.getEfecto()=="Comodin" or carta.getEfecto()=="Comodin +4"):
@@ -210,15 +221,19 @@ while ( estado ):
         mazo.revolver()
 
 
+        Tablero.tomarCarta(mazo)
         #Repartir las 7 Cartas iniciales
         for i in range(0,7):
-            IA.tomarCarta()
+            IA.tomarCarta(mazo)
             P1.tomarCarta(mazo)
 
         #Se toma una carta del Mazo para iniciar el juego:
-        Tablero.tomarCarta(mazo)
-        if(Tablero.getUltimaCarta().getEfecto()=="Comodin" or Tablero.getUltimaCarta().getEfecto()=="Comodin +4"):
-            Tablero.tomarCarta(mazo)
+        comodin = True
+        while(comodin):
+            if(Tablero.getUltimaCarta().getEfecto()!=""):
+                Tablero.tomarCarta(mazo)
+            else:
+                comodin = False
         update = True
         turno = turno + 1
         if (update):
