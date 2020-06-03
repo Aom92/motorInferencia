@@ -26,6 +26,9 @@ class ArbolDecision:
                 if i.getValue() == carta.getValue():
                     nodoAInsrtar = NodoPosibilidad(i)
                     nodo.insertByNumber(nodoAInsrtar)
+                if i.getEfecto() == carta.getEfecto():
+                    nodoAInsrtar = NodoPosibilidad(i)
+                    nodo.insertByNumber(nodoAInsrtar)
         else:
             for i in lista:
                 carta = nodo.getValue()
@@ -33,6 +36,9 @@ class ArbolDecision:
                     nodoAInsrtar = NodoPosibilidad(i)
                     nodo.insertByColor(nodoAInsrtar)
                 if i.getValue() == carta.getValue():
+                    nodoAInsrtar = NodoPosibilidad(i)
+                    nodo.insertByNumber(nodoAInsrtar)
+                if i.getEfecto() == carta.getEfecto():
                     nodoAInsrtar = NodoPosibilidad(i)
                     nodo.insertByNumber(nodoAInsrtar)
 
