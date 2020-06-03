@@ -19,8 +19,8 @@ class IA(Jugador):
         self.contador = 0
     
     """Metodo encargado de tomar una carta del mazo"""
-    def tomarCarta(self):
-        self.mano.append(self.mazo.tomarCarta())
+    def tomarCarta(self, mazo):
+        self.mano.append(mazo.tomarCarta())
         #Buscamos borrar del conjunto de cartas no jugado las cartas que posee el CPU
         for i in self.mano:
             for j in self.cartas:

@@ -52,15 +52,15 @@ def IAPiensa(IA,tablero, mazo):
     #Empezamos checando que la carta jugada anteriormente no sea un comodin que salte el 
     #juego del CPU o lo haga tomar cartas
     if(tablero.getUltimaCarta().getEfecto()=="+2"):
-        IA.tomarCarta()
-        IA.tomarCarta()
+        IA.tomarCarta(mazo)
+        IA.tomarCarta(mazo)
         return 0
 
-    elif(tablero.getUltimaCarta().getEfecto()=="Comodin +4"):
-        IA.tomarCarta()
-        IA.tomarCarta()
-        IA.tomarCarta()
-        IA.tomarCarta()
+    elif(tablero.getPenultimaCarta().getEfecto()=="Comodin +4"):
+        IA.tomarCarta(mazo)
+        IA.tomarCarta(mazo)
+        IA.tomarCarta(mazo)
+        IA.tomarCarta(mazo)
         return 0
 
     elif(tablero.getUltimaCarta().getEfecto()=="Salto"):
@@ -86,7 +86,7 @@ def IAPiensa(IA,tablero, mazo):
                 #En caso de no tener una el CPU tomara una carta hatsa que la jugada ya sea valida
                 while(carta==False):
                     print("IA TOMO UNA CARTA")
-                    IA.tomarCarta()
+                    IA.tomarCarta(mazo)
                     IA.mostrarMano()
                     carta= IA.dejaCarta()
                 tablero.recibeCarta(carta)
@@ -110,9 +110,10 @@ def IAPiensa(IA,tablero, mazo):
             print("Carta jugada = ",end="")
             carta[0].mostrar()
             tablero.recibeCarta(carta[0])
-            tablero.recibeCarta(Carta("",carta[1],""))
+            nuevaCarta = Carta("",carta[1],"")
+            tablero.recibeCarta(nuevaCarta)
             print("Carta jugada = ",end="")
-            carta.mostrar()
+            nuevaCarta.mostrar()
 
 
 """
@@ -130,7 +131,7 @@ def juegaJugador(jugador, tablero, mazo):
             jugador.tomarCarta(mazo)
         return
 
-    elif(tablero.getUltimaCarta().getEfecto()=="Comodin +4"):
+    elif(tablero.getPenultimaCarta().getEfecto()=="Comodin +4"):
         for i in range(0,4):
             jugador.tomarCarta(mazo)
         return
@@ -209,13 +210,17 @@ while ( estado ):
 
         #Repartir las 7 Cartas iniciales
         for i in range(0,7):
-            IA.tomarCarta()
+            IA.tomarCarta(mazo)
             P1.tomarCarta(mazo)
 
         #Se toma una carta del Mazo para iniciar el juego:
         Tablero.tomarCarta(mazo)
-        if(Tablero.getUltimaCarta().getEfecto()=="Comodin" or Tablero.getUltimaCarta().getEfecto()=="Comodin +4"):
-            Tablero.tomarCarta(mazo)
+        comodin = True
+        while(comodin):
+            if(Tablero.getUltimaCarta().getEfecto()!=""):
+                Tablero.tomarCarta(mazo)
+            else:
+                comodin = False
         update = True
         turno = turno + 1
         if (update):
