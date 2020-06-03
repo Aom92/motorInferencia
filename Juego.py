@@ -125,12 +125,12 @@ cartas todavia disponible
 def juegaJugador(jugador, tablero, mazo):
     #Empezamos checando que la carta jugada anteriormente no sea un comodin que salte el 
     #juego del jugador o lo haga tomar cartas
-    if(tablero.getUltimaCarta().getEfecto=="+2"):
+    if(tablero.getUltimaCarta().getEfecto()=="+2"):
         for i in range(0,2):
             jugador.tomarCarta(mazo)
         return
 
-    elif(tablero.getUltimaCarta().getEfecto=="Comodin +4"):
+    elif(tablero.getUltimaCarta().getEfecto()=="Comodin +4"):
         for i in range(0,4):
             jugador.tomarCarta(mazo)
         return
