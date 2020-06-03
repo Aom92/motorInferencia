@@ -104,7 +104,7 @@ class IA(Jugador):
                         break
         else:
             while(out == False):
-                carta = None
+                carta = Carta("","","")
                 #Si no agarramos una de entre todas las cartas
                 r = random.randint(0,len(self.juegos)-1)
                 if(numeros.count(r)==0):
