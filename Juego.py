@@ -89,7 +89,7 @@ def IAPiensa(IA,tablero, mazo):
                 #Buscamos que el CPU deje una carta siguiendo las reglas del juego
                 carta= IA.dejaCarta()
                 #En caso de no tener una el CPU tomara una carta hatsa que la jugada ya sea valida
-                while(carta == False):
+                while(carta == False or carta == None):
                     print("IA TOMO UNA CARTA")
                     IA.tomarCarta(mazo)
                     IA.mostrarMano()

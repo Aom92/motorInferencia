@@ -26,7 +26,6 @@ class IA(Jugador):
             for j in self.cartas:
                 if(j.toString()==i.toString()):
                     self.cartas.pop(self.cartas.index(j))
-        self.getPosibilities()
 
     """Getter de la mano de la CPU"""
     def getMano(self):
@@ -39,6 +38,7 @@ class IA(Jugador):
     """Metodo encargado de actualizar los juegos posibles a futuro e indicar si todavia posibilidades calculadas"""
     def actualizaPosibilidades(self):
         #tam=0
+        self.getPosibilities()
         inDeck=False
 
         #Eliminamos la ultima carta jugada del conjunto de cartas posibles
@@ -101,7 +101,7 @@ class IA(Jugador):
                         carta = i[0]
                         out = True
                         break
-        else:
+        if(carta == None):
             while(out == False):
                 carta = None
                 #Si no agarramos una de entre todas las cartas
@@ -112,13 +112,13 @@ class IA(Jugador):
                     #Obtenemos el r-esimo juego y su primera carta
                     juego = self.juegos[r]
                     cont = cont+1
-                    if(len(self.juegos)!=0):
+                    if(len(juego)>0):
                         carta = juego[0]
                         #Si la carta esta en la mano de la IA, que deberia, checamos si es valido usando PAT
-                        for i in self.mano:
-                            if(i.toString() == carta.toString()):
-                                out = jugadaValida([self.tablero.getPenultimaCarta(),self.tablero.getUltimaCarta(),carta])
-                                break
+                        #for i in self.mano:
+                            #if(i.toString() == carta.toString()):
+                        out = jugadaValida([self.tablero.getPenultimaCarta(),self.tablero.getUltimaCarta(),carta])
+                        #break
                 print("Jugada:",out)
                 #Igualmente checamos que no hayamos intentado ya con todas las posibilidades que hay
                 if( cont >= len(self.juegos)):
@@ -157,8 +157,11 @@ class IA(Jugador):
 
     """Metodo encargado de mostrar la mano de la computadora (usado para depuracion)"""
     def mostrarMano(self):
+        iter = 0
         for carta in self.mano:
+            print(str(iter)+") ",end="")
             carta.mostrar()
+            iter = iter + 1
 
     """Getter del atributo Nombre"""
     def getName(self):
@@ -169,7 +172,7 @@ class IA(Jugador):
         #Reiniciamos la lista de opciones
         self.juegos = []
         #Hacemos que el arbol vuelva a calcular las posibilidades y las guardamos en una lista
-        self.arbol.setRoot(self.tablero.mano[len(self.tablero.mano)-1])
+        self.arbol.setRoot(self.tablero.getUltimaCarta())
         self.arbol.insertPosibilities(self.cartas, self.mano, 5, self.arbol.getRoot())
         juegos = self.posibilidades.getCards(self.arbol)
 
