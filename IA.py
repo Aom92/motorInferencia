@@ -156,9 +156,9 @@ class IA(Jugador):
         juegos = self.posibilidades.getCards(self.arbol)
 
 
-        #for i in juegos:
-            #if(i[len(i)-1].getEfecto() != ""):
-                #self.juegos.append(i)
+        for i in juegos:
+            if(i[len(i)-1].getEfecto() != ""):
+                self.juegos.append(i)
 
         #Si las posibilidades siguen vacías obtenemos un n numero de jugadas
         if(len(self.juegos)==0):
