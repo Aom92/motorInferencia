@@ -63,7 +63,7 @@ class Posibilidades:
                 self.mejores.append(i)
             #Procedemos a ver si la jugada termina en comodin separando la cadena en sub cadenas
             cartas=i[1].split("=>")
-            print(i)
+            #print(i)
             mano = []
 
             for j in cartas:

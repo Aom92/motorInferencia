@@ -121,18 +121,22 @@ class IA(Jugador):
                                 break
                 print("Jugada:",out)
                 #Igualmente checamos que no hayamos intentado ya con todas las posibilidades que hay
-                if( cont >= len(self.juegos)):
-                    return False
+            if( cont >= len(self.juegos)):
+                return False
 
         print("Saliendo")
+
+        if(type(carta) is type(None)):
+            return False
 
         #Ya que el juego es valido obtenemos todos los juegos que contienen esa carta en dicho paso
         nuevoJuego=[]
         for i in self.juegos:
             if(len(i)>0):
-                if(i[0].toString() == carta.toString()):
-                    i.pop(0)
-                    nuevoJuego.append(i)
+                if(type(i[0]) is type(carta)):
+                    if(i[0].toString() == carta.toString()):
+                        i.pop(0)
+                        nuevoJuego.append(i)
 
         #Actualizamos la lista de juegos
         self.juegos=[]
@@ -142,9 +146,10 @@ class IA(Jugador):
         #Eliminamos la carta de nuestra mano
         iter = 0
         for i in self.mano:
-            if(i.toString()==carta.toString()):
-                self.mano.pop(iter)
-                break
+            if(type(i) is type(carta)):
+                if(i.toString()==carta.toString()):
+                    self.mano.pop(iter)
+                    break
             iter = iter + 1
 
         #La retornamos
@@ -174,20 +179,20 @@ class IA(Jugador):
                 self.juegos.append(i)
 
         #Si las posibilidades siguen vacías obtenemos un n numero de jugadas
-        if(len(self.juegos)==0):
-            numeros = []
-            for i in range(0, int(len(juegos)/3)):
-                r = random.randint(0,len(juegos)-1)
-                if(numeros.count(r)==0):
-                    numeros.append(r)
-                    self.juegos.append(juegos[r])
+        #if(len(self.juegos)==0):
+        numeros = []
+        for i in range(0, int(len(juegos)/3)):
+            r = random.randint(0,len(juegos)-1)
+            if(numeros.count(r)==0):
+                numeros.append(r)
+                self.juegos.append(juegos[r])
 
         #No se que hace esta linea, favor de no quitar
         for i in self.juegos:
             if(len(i)>0):
                 i.pop(0)
 
-        #print("Juegos:",self.juegos)
+        print("Juegos:",self.juegos)
 
     """Funcion encargada de ver si es un momento optimo para dejar un comodin +4"""
     def ifDejaMasCuatro(self):
