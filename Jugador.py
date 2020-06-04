@@ -19,7 +19,10 @@ class Jugador:
 
     """
     def tomarCarta(self, mazo):
-        self.mano.append(mazo.tomarCarta())
+        if(len(mazo.getCartas()) > 0):
+            self.mano.append(mazo.tomarCarta())
+            return "Hay cartas"
+        return "Ya no hay cartas"
 
     """Getter del atributo mano"""
     def getMano(self):
@@ -38,10 +41,14 @@ class Jugador:
 
     """Metodo encargado de dejar la carta indidcada por el usuario"""
     def dejaCarta(self,iterator):
+        if(iterator >= len(self.mano)):
+            return self.mano[len(self.mano)-1]    
         return self.mano.pop(iterator)
 
     """Getter de la carta indicada por el usuario"""
     def getCarta(self,iterator):
+        if(iterator >= len(self.mano)):
+            return self.mano[len(self.mano)-1] 
         return self.mano[iterator]
 
     """Metodo encargado de mostrar la mano del usuario"""
@@ -65,6 +72,11 @@ class Jugador:
     """Getter de la penultima carta en la lista del usuario"""
     def getPenultimaCarta(self):
         return self.mano[len(self.mano)-2]
+
+    
+    """Metodod encargado de retonar el tamaño de la mano de cartas restantes"""
+    def getTamCartas(self):
+        return len(self.mano)
         
 
 

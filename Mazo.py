@@ -18,6 +18,7 @@ class Mazo:
             for Numero in range(0,10):
                 self.cartas.append(Carta(Numero,Color,""))
             for Especial in ["Salto", "Reversa", "+2"]:
+            #for Especial in ["+2"]:
                 self.cartas.append(Carta("",Color,Especial))
                 self.cartas.append(Carta("",Color,Especial))
             for Comodin in ["Comodin","Comodin +4"]:
@@ -42,6 +43,9 @@ class Mazo:
     """
     def tomarCarta(self):
         return self.cartas.pop()
+
+    def getCartas(self):
+        return self.cartas
     
 """
 Ejemplo de uso
