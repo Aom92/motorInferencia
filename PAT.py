@@ -376,9 +376,9 @@ def jugadaValida(listaCartas):
     validoNumero = evaluarExpresion(stackNumero)
     del stackNumero
 
-    print("Color",validoColor)
-    print("Numero",validoNumero)
-    print("\n\n")
+    #print("Color",validoColor)
+    #print("Numero",validoNumero)
+    #print("\n\n")
 
     #En caso de que el proceso de transitividad sea valido, ya sea por el color de las cartas o el valor numerico
     #Contamos el juego como valido

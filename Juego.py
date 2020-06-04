@@ -92,16 +92,15 @@ def IAPiensa(IA,tablero, mazo):
                 while(carta == False or carta == None):
                     print("IA TOMO UNA CARTA")
                     returned = IA.tomarCarta(mazo)
-                    print(IA.tomarCarta(mazo))
+                    #print(IA.tomarCarta(mazo))
 
                     #Checamos que todavía hayan cartas en el juego
                     if(returned == "Ya no hay cartas"):
                         print("Compu pasa")
                         return "Paso"
-
-                    IA.mostrarMano()
+                        
                     carta= IA.dejaCarta()
-                    print(carta)
+
                 tablero.recibeCarta(carta)
                 print("Carta jugada = ",end="")
                 carta.mostrar()
@@ -183,6 +182,7 @@ def juegaJugador(jugador, tablero, mazo):
             yes = input("Va a tomar carta? [Y/n]\n$ ")
     
         #En caso de no tomar carta se procede a que el usuario elija una
+        print("===== TU MANO =====")
         jugador.mostrarMano()
 
 
@@ -214,11 +214,10 @@ def juegaJugador(jugador, tablero, mazo):
 
             #Volver a checar si la carta debe ser tirada por un glitch dentro de PAT
             if(valido):
-                if(carta.getColor() != tablero.getUltimaCarta().getColor() and carta.getValue() != tablero.getUltimaCarta().getValue() ):
+                if( (carta.getColor() != tablero.getUltimaCarta().getColor() ) and ( int(carta.getValue()) != int(tablero.getUltimaCarta().getValue() )) ):
                     valido = False
-
-            if(valido == False):
-                print("Jugada invalida")
+                    print("Jugada invalida")
+                
 
         else:
             valido = True
