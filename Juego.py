@@ -57,15 +57,15 @@ def IAPiensa(IA,tablero, mazo):
     #Empezamos checando que la carta jugada anteriormente no sea un comodin que salte el 
     #juego del CPU o lo haga tomar cartas
     if(tablero.getUltimaCarta().getEfecto()=="+2" and tiro=="jugador"):
-        IA.tomarCarta(mazo)
-        IA.tomarCarta(mazo)
+        returned = IA.tomarCarta(mazo)
+        returned = IA.tomarCarta(mazo)
         return 0
 
     elif(tablero.getPenultimaCarta().getEfecto()=="Comodin +4" and tiro=="jugador"):
-        IA.tomarCarta(mazo)
-        IA.tomarCarta(mazo)
-        IA.tomarCarta(mazo)
-        IA.tomarCarta(mazo)
+        returned = IA.tomarCarta(mazo)
+        returned = IA.tomarCarta(mazo)
+        returned = IA.tomarCarta(mazo)
+        returned = IA.tomarCarta(mazo)
         return 0
 
     elif(tablero.getUltimaCarta().getEfecto()=="Salto" and tiro=="jugador"):
@@ -91,7 +91,14 @@ def IAPiensa(IA,tablero, mazo):
                 #En caso de no tener una el CPU tomara una carta hatsa que la jugada ya sea valida
                 while(carta == False or carta == None):
                     print("IA TOMO UNA CARTA")
-                    IA.tomarCarta(mazo)
+                    returned = IA.tomarCarta(mazo)
+                    print(IA.tomarCarta(mazo))
+
+                    #Checamos que todavía hayan cartas en el juego
+                    if(returned == "Ya no hay cartas"):
+                        print("Compu pasa")
+                        return "Paso"
+
                     IA.mostrarMano()
                     carta= IA.dejaCarta()
                     print(carta)
@@ -122,6 +129,8 @@ def IAPiensa(IA,tablero, mazo):
             nuevaCarta.mostrar()
     tiro="IA"
 
+    return "No paso"
+
 
 """
 
@@ -138,12 +147,12 @@ def juegaJugador(jugador, tablero, mazo):
     #juego del jugador o lo haga tomar cartas
     if(tablero.getUltimaCarta().getEfecto()=="+2" and tiro=="IA"):
         for i in range(0,2):
-            jugador.tomarCarta(mazo)
+            returned = jugador.tomarCarta(mazo)
         return
 
     elif(tablero.getPenultimaCarta().getEfecto()=="Comodin +4" and tiro=="IA"):
         for i in range(0,4):
-            jugador.tomarCarta(mazo)
+            returned = jugador.tomarCarta(mazo)
         return
 
     elif(tablero.getUltimaCarta().getEfecto()=="Salto" and tiro=="IA"):
@@ -160,7 +169,15 @@ def juegaJugador(jugador, tablero, mazo):
         carta = None
         #En caso de tomar una carta se repite el proceso hasta que el jugador deje una
         while(yes == "Y" or yes == "y"):
-            jugador.tomarCarta(mazo)
+            returned = jugador.tomarCarta(mazo)
+
+            #Checamos que todavía hayan cartas en el mazo
+            if(returned == "Ya no hay cartas"):
+                print("Ya no hay mas cartas")
+                i = input("Desea pasar? [Y/n]")
+                if(i == "Y" or i == "y"):
+                    return "Paso"
+
             P1.mostrarMano()
             yes = input("Va a tomar carta? [Y/n]\n$ ")
     
@@ -204,6 +221,8 @@ def juegaJugador(jugador, tablero, mazo):
         i = int(input("Ingrese numero correspondiente al color\n$ "))
         nuevaCarta = Carta("",opciones[i],"")
         tablero.recibeCarta(nuevaCarta)
+    
+    return "No paso"
 
 while ( estado ):
 
@@ -219,7 +238,8 @@ while ( estado ):
         mazo.revolver()
 
 
-        Tablero.tomarCarta(mazo)
+        returned = Tablero.tomarCarta(mazo)
+        print(returned)
         #Repartir las 7 Cartas iniciales
         for i in range(0,7):
             IA.tomarCarta(mazo)
@@ -242,9 +262,9 @@ while ( estado ):
     #Logica del Juego
     #Inicia jugando el usuario
     turno = turno + 1
-    juegaJugador(P1, Tablero, mazo)
+    pasaJugador = juegaJugador(P1, Tablero, mazo)
     IA.setContador(len(P1.getMano()))
-    IAPiensa(IA,Tablero,mazo)
+    pasaIA = IAPiensa(IA,Tablero,mazo)
 
     #Por reglas del juego la computadora debe de indicar cuando le queda una sola carta
     UNO=False
@@ -260,6 +280,21 @@ while ( estado ):
     if(len(P1.getMano())==0):
         print("Felicidades, usted ("+P1.getName()+") a ganado")
         estado = False
+
+    if(pasaJugador == "Paso" and pasaIA == "Paso"):
+        gana = ""
+        if(P1.getTamCartas() > IA.getTamCartas() ):
+            gana = "IA"
+        else:
+            gana = P1.getName()
+
+        print("Ya no hay mas cartas en el juego, el ganado es:", gana)
+
+        P1.mostrarMano()
+        print("\n")
+        IA.mostrarMano()
+        estado = False
+
 
     
 

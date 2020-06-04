@@ -19,7 +19,10 @@ class Jugador:
 
     """
     def tomarCarta(self, mazo):
-        self.mano.append(mazo.tomarCarta())
+        if(len(mazo.getCartas()) > 0):
+            self.mano.append(mazo.tomarCarta())
+            return "Hay cartas"
+        return "Ya no hay cartas"
 
     """Getter del atributo mano"""
     def getMano(self):
@@ -69,6 +72,11 @@ class Jugador:
     """Getter de la penultima carta en la lista del usuario"""
     def getPenultimaCarta(self):
         return self.mano[len(self.mano)-2]
+
+    
+    """Metodod encargado de retonar el tamaño de la mano de cartas restantes"""
+    def getTamCartas(self):
+        return len(self.mano)
         
 
 

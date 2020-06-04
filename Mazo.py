@@ -43,6 +43,9 @@ class Mazo:
     """
     def tomarCarta(self):
         return self.cartas.pop()
+
+    def getCartas(self):
+        return self.cartas
     
 """
 Ejemplo de uso

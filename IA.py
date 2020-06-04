@@ -20,12 +20,16 @@ class IA(Jugador):
     
     """Metodo encargado de tomar una carta del mazo"""
     def tomarCarta(self, mazo):
-        self.mano.append(mazo.tomarCarta())
-        #Buscamos borrar del conjunto de cartas no jugado las cartas que posee el CPU
-        for i in self.mano:
-            for j in self.cartas:
-                if(j.toString()==i.toString()):
-                    self.cartas.pop(self.cartas.index(j))
+        if(len(self.mazo.getCartas()) > 0):
+            self.mano.append(mazo.tomarCarta())
+            #Buscamos borrar del conjunto de cartas no jugado las cartas que posee el CPU
+            for i in self.mano:
+                for j in self.cartas:
+                    if(j.toString()==i.toString()):
+                        self.cartas.pop(self.cartas.index(j))
+            return "Hay cartas"
+        else:
+            return "Ya no hay cartas"
 
     """Getter de la mano de la CPU"""
     def getMano(self):
@@ -91,6 +95,7 @@ class IA(Jugador):
         numeros = []
         carta = None
 
+        #Checamos que no se haya jugado un comodin anteriormente
         if(self.tablero.getUltimaCarta().getEfecto() != "" or (self.tablero.getPenultimaCarta().getEfecto() != "" and self.tablero.getUltimaCarta().getValue()=="")):
             for i in self.mano:
                 if(i.getColor() == self.tablero.getUltimaCarta().getColor()):
@@ -289,6 +294,10 @@ class IA(Jugador):
     """Funcion encargada de actualizar el contador de cartas del juego"""
     def setContador(self, cont):
         self.contador = cont
+
+    """Metodod encargado de retonar el tamaño de la mano de cartas restantes"""
+    def getTamCartas(self):
+        return len(self.mano)
 
 
     
