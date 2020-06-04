@@ -214,7 +214,7 @@ def juegaJugador(jugador, tablero, mazo):
 
             #Volver a checar si la carta debe ser tirada por un glitch dentro de PAT
             if(valido):
-                if( (carta.getColor() != tablero.getUltimaCarta().getColor() ) and ( int(carta.getValue()) != int(tablero.getUltimaCarta().getValue() )) ):
+                if( (carta.getColor() != tablero.getUltimaCarta().getColor() ) and ( str(carta.getValue()) != str(tablero.getUltimaCarta().getValue() )) ):
                     valido = False
                     print("Jugada invalida")
                 
