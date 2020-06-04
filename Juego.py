@@ -97,6 +97,7 @@ def IAPiensa(IA,tablero, mazo):
                     #Checamos que todavía hayan cartas en el juego
                     if(returned == "Ya no hay cartas"):
                         print("Compu pasa")
+                        tiro = ""
                         return "Paso"
                         
                     carta= IA.dejaCarta()
@@ -176,6 +177,7 @@ def juegaJugador(jugador, tablero, mazo):
                 print("Ya no hay mas cartas")
                 i = input("Desea pasar? [Y/n]")
                 if(i == "Y" or i == "y"):
+                    tiro = ""
                     return "Paso"
 
             P1.mostrarMano()
