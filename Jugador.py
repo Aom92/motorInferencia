@@ -38,10 +38,14 @@ class Jugador:
 
     """Metodo encargado de dejar la carta indidcada por el usuario"""
     def dejaCarta(self,iterator):
+        if(iterator >= len(self.mano)):
+            return self.mano[len(self.mano)-1]    
         return self.mano.pop(iterator)
 
     """Getter de la carta indicada por el usuario"""
     def getCarta(self,iterator):
+        if(iterator >= len(self.mano)):
+            return self.mano[len(self.mano)-1] 
         return self.mano[iterator]
 
     """Metodo encargado de mostrar la mano del usuario"""

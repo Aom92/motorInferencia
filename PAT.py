@@ -33,7 +33,7 @@ def traductorColor(listaCartas):
             numero="E"
         else:
             #Si no tiene valor numerico ni color ponemos una C de comodin
-            if(listaCartas[i].getValue()==""):
+            if(listaCartas[i].getColor()==""):
                 numero="C"
             else:
                 numero = ""+str(listaCartas[i].getValue())
@@ -51,8 +51,8 @@ def traductorColor(listaCartas):
     expresion = left[2]
     toReturnLeft.append(expresion[1]+">"+expresion)
 
-    #print(toReturnLeft)
-    #print(toReturnRight)
+    print(toReturnLeft)
+    print(toReturnRight)
 
     return [toReturnLeft,toReturnRight]
 
@@ -84,12 +84,14 @@ def traductorNumero(listaCartas):
             numero="E"
         else:
             #Si no tiene valor numerico ni color ponemos una C de comodin
-            if(listaCartas[i].getValue()==""):
+            if(listaCartas[i].getColor()==""):
                 numero="C"
             else:
                 numero = ""+str(listaCartas[i].getValue())
         
-        #Ingresamos las premisas en antecedente
+        if(numero == ""):
+            numero = "N"
+        
         if(i<2):
             left.append(numero)
         else:
@@ -103,12 +105,10 @@ def traductorNumero(listaCartas):
     expresion = left[2]
     toReturnLeft.append(expresion[3]+">"+expresion)
 
-    #print(toReturnLeft)
-    #print(toReturnRight)
+    print(toReturnLeft)
+    print(toReturnRight)
 
-    #Retornamos antecedente y consecuente en una lista
     return [toReturnLeft,toReturnRight]
-
 """
 
     Funcion que evalua una expresion del antecedentes del metodo de Prueba automatica de teoremas
@@ -376,8 +376,9 @@ def jugadaValida(listaCartas):
     validoNumero = evaluarExpresion(stackNumero)
     del stackNumero
 
-    #print("Color",validoColor)
-    #print("Numero",validoNumero)
+    print("Color",validoColor)
+    print("Numero",validoNumero)
+    print("\n\n")
 
     #En caso de que el proceso de transitividad sea valido, ya sea por el color de las cartas o el valor numerico
     #Contamos el juego como valido

@@ -51,8 +51,8 @@ cartas todavia disponible
 """
 def IAPiensa(IA,tablero, mazo):
 
+    global turno
     global tiro
-    
 
     #Empezamos checando que la carta jugada anteriormente no sea un comodin que salte el 
     #juego del CPU o lo haga tomar cartas
@@ -89,7 +89,7 @@ def IAPiensa(IA,tablero, mazo):
                 #Buscamos que el CPU deje una carta siguiendo las reglas del juego
                 carta= IA.dejaCarta()
                 #En caso de no tener una el CPU tomara una carta hatsa que la jugada ya sea valida
-                while(carta == False):
+                while(carta == False or carta == None):
                     print("IA TOMO UNA CARTA")
                     IA.tomarCarta(mazo)
                     IA.mostrarMano()
@@ -136,7 +136,7 @@ def juegaJugador(jugador, tablero, mazo):
 
     #Empezamos checando que la carta jugada anteriormente no sea un comodin que salte el 
     #juego del jugador o lo haga tomar cartas
-    if(tablero.getUltimaCarta().getEfecto()=="+2" and tiro == "IA"):
+    if(tablero.getUltimaCarta().getEfecto()=="+2" and tiro=="IA"):
         for i in range(0,2):
             jugador.tomarCarta(mazo)
         return
@@ -202,9 +202,8 @@ def juegaJugador(jugador, tablero, mazo):
             print(str(iter)+")"+ i)
             iter = iter + 1
         i = int(input("Ingrese numero correspondiente al color\n$ "))
-        nuevaCarta = Carta("",opciones[i], "")
+        nuevaCarta = Carta("",opciones[i],"")
         tablero.recibeCarta(nuevaCarta)
-        
 
 while ( estado ):
 
