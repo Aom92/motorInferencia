@@ -42,6 +42,9 @@ class Mazo:
     Toma una carta del mazo
     """
     def tomarCarta(self):
+        if (len(self.cartas)== 0):
+            print("No quedan Cartas en el mazo")
+            return None
         return self.cartas.pop()
     
 """

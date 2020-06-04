@@ -91,6 +91,7 @@ class IA(Jugador):
         numeros = []
         carta = None
 
+<<<<<<< HEAD
         if(self.tablero.getUltimaCarta().getEfecto() != "" or (self.tablero.getPenultimaCarta().getEfecto() != "" and self.tablero.getUltimaCarta().getValue()=="")):
             for i in self.mano:
                 if(i.getColor() == self.tablero.getUltimaCarta().getColor()):
@@ -130,6 +131,40 @@ class IA(Jugador):
                     #Igualmente checamos que no hayamos intentado ya con todas las posibilidades que hay
                     if( cont >= len(self.juegos)):
                         return False
+=======
+        #Si quedan pocos juegos le damos prioridad a los comodines
+        if(len(self.juegos[0])<=1):
+            for i in self.juegos:
+                #print("Flag 3")
+                if(len(i)>0):
+                    if(i[0].getEfecto() != "" and (i[0].getColor()=="" or i[0].getColor() == self.tablero.getUltimaCarta().getColor())):
+                        print("Flag 4")
+                        carta = i[0]
+                        out = True
+                        break
+        if(carta == None):
+            while(out == False):
+                carta = None
+                #Si no agarramos una de entre todas las cartas
+                r = random.randint(0,len(self.juegos)-1)
+                if(numeros.count(r)==0):
+                    print(r)
+                    numeros.append(r)
+                    #Obtenemos el r-esimo juego y su primera carta
+                    juego = self.juegos[r]
+                    cont = cont+1
+                    if(len(juego)>0):
+                        carta = juego[0]
+                        #Si la carta esta en la mano de la IA, que deberia, checamos si es valido usando PAT
+                        #for i in self.mano:
+                            #if(i.toString() == carta.toString()):
+                        out = jugadaValida([self.tablero.getPenultimaCarta(),self.tablero.getUltimaCarta(),carta])
+                        #break
+                print("Jugada:",out)
+                #Igualmente checamos que no hayamos intentado ya con todas las posibilidades que hay
+                if( cont >= len(self.juegos)):
+                    return False
+>>>>>>> 44007c76b448d52f5d6b2a0b21c05b82fbfcb465
 
         print("Saliendo")
 
