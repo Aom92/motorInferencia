@@ -13,7 +13,7 @@ tiro = ""
 
 """Funcion encarga de mostrar los detalles del juego en el formato CLI"""
 def Draw(UNO,Tablero,IA,P1):
-    #os.system("cls")
+    os.system("cls")
 
     global turno
 
@@ -164,6 +164,7 @@ def juegaJugador(jugador, tablero, mazo):
     #En caso de que pueda jugar empezamos por preguntarle al usuario si quiere tomar una carta o jugar
     valido = False
     while(valido == False):
+        print("===== TU MANO =====")
         P1.mostrarMano()
         yes = input("Va a tomar carta? [Y/n]\n$ ")
         carta = None
@@ -183,7 +184,21 @@ def juegaJugador(jugador, tablero, mazo):
     
         #En caso de no tomar carta se procede a que el usuario elija una
         jugador.mostrarMano()
-        i = int(input("ingrese carta a dejar\n$ "))
+
+
+        #Try-Catch para que el usuario ingrese un numero valido
+        while(True):
+            try:
+                i = int(input("ingrese carta a dejar\n$ "))
+                pass
+            except:
+                print("Ingrese un valor numerico por favor")
+                pass
+            else:
+                break
+                pass
+
+        
         #Buscamos que el valor de indice ingresado exista
         if(i >= len(jugador.getMano())):
             print("Numero ingresado erroneo")
@@ -196,6 +211,11 @@ def juegaJugador(jugador, tablero, mazo):
             #Mediante el metodo jugadaValida que implementa PAT checamos que sea valida
             valido = jugadaValida([tablero.getPenultimaCarta(),tablero.getUltimaCarta(),carta])
             print(valido)
+
+            #Volver a checar si la carta debe ser tirada por un glitch dentro de PAT
+            if(valido):
+                if(carta.getColor() != tablero.getUltimaCarta().getColor() and carta.getValue() != tablero.getUltimaCarta().getValue() ):
+                    valido = False
 
             if(valido == False):
                 print("Jugada invalida")
