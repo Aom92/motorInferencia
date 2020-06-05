@@ -11,6 +11,13 @@ update = False
 turno = 0
 tiro = ""
 
+def Presentacion():
+    print("=============================================")
+    print("|| Estructuras Discretas - Proyecto Final ||")
+    print("A. D. Rodrigo ; J. P. Hugo  ; R. M. Roberto\n")
+    print("Sistema Experto UNO ")
+    input("\nPresione una tecla para continuar...")
+
 """Funcion encarga de mostrar los detalles del juego en el formato CLI"""
 def Draw(UNO,Tablero,IA,P1):
     os.system("cls")
@@ -21,21 +28,15 @@ def Draw(UNO,Tablero,IA,P1):
 
     print("== Turno {}:  ==".format(turno))
 
+    print("========  Cartas de {}:  ========".format(IA.getName()))
+    IA.mostrarMano()
+
     print("========  En la mesa... : ==========".format(Tablero.getName()))
-    #print(Tablero.mano[len(Tablero.mano)-1].mostrar())
     Tablero.mostrarMano()
     print("\n")
 
-    print("========  Cartas de {}:  ========".format(IA.getName()))
-    IA.mostrarMano()
-    print("\n")
-
-    print("========  Cartas de {}:  ========".format(P1.getName()))
-    P1.mostrarMano()
-    print("\n")
-
     if(UNO):
-        print("=================== CPU UNO ===================")
+        print("=================== ¡¡¡¡ UNO !!!! ===================")
 
     print("\n")
 
@@ -249,9 +250,14 @@ while ( estado ):
 
     #Inicio del Juego
     if(turno == 0):
+
+        Presentacion()
+
+        nametag = input("Ingrese su nombre para comenzar a jugar: ")
+
         #Se inicializan el mazo junto a los jugadores
         mazo = Mazo()
-        P1 = Jugador("Pedrito")
+        P1 = Jugador(nametag)
         Tablero = Jugador("Tablero")
         IA = IA("PC",mazo,Tablero)
 
@@ -302,7 +308,7 @@ while ( estado ):
         print("Felicidades, usted ("+P1.getName()+") a ganado")
         estado = False
 
-    if(pasaJugador == "Paso" and pasaIA == "Paso"):
+    if( (pasaJugador == "Paso" and pasaIA == "Paso") and len(mazo.cartas) == 0 ):
         gana = ""
         if(P1.getTamCartas() > IA.getTamCartas() ):
             gana = "IA"
@@ -311,12 +317,13 @@ while ( estado ):
 
         print("Ya no hay mas cartas en el juego, el ganado es:", gana)
 
-        P1.mostrarMano()
+        print("Puntuacion de {} = {} ".format(P1.getName(),len(P1.mano)))
         print("\n")
-        IA.mostrarMano()
+        print("Puntuacion de {} = {} ".format(IA.getName(),len(IA.mano)))
         estado = False
 
-
+print("\nGracias por jugar!")
+input("\nPresione una tecla para finalizar...")
     
 
 
