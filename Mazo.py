@@ -55,7 +55,10 @@ class Mazo(object):
         return self.cartas.pop()
 
     def getCartas(self):
-        return self.cartas
+        toReturn = []
+        for i in self.cartas:
+            toReturn.append(i)
+        return toReturn
     
 """
 Ejemplo de uso
