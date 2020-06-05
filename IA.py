@@ -12,7 +12,7 @@ class IA(Jugador):
         self.nombre = nombre
         self.mano = []                          #Mano de la computadora
         self.mazo = Mazo()                        #Objeto mazo para usar posteriormente
-        self.cartas = self.mazo.cartas               #Conjunto de cartas no jugadas y que no posee el CPU con el cual se verán las posibilidades
+        self.cartas = self.mazo.getCartas()               #Conjunto de cartas no jugadas y que no posee el CPU con el cual se verán las posibilidades
         self.posibilidades = Posibilidades()    #Objeto manejador de posibilidades
         self.arbol = ArbolDecision()            #Objeto manejador del arbol de decisiones
         self.tablero = tablero                  #Tablero en que se juega 
