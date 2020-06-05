@@ -1,13 +1,24 @@
 from Carta import Carta
 import random
-class Mazo:
+class Mazo(object):
+
+    __instance = None
+
     """
     Constructor de un Objeto Mazo
     """
-    def __init__(self):
+    def __new__(cls):                                                 # 0x00000232E1B62408
+
+        if Mazo.__instance is None:
+            Mazo.__instance = object.__new__(cls)
+            Mazo.__instance.inicializar()
+        return Mazo.__instance
+        
+
+    def inicializar(self):
         self.cartas = []
         self.generar()
-        
+
     """
     Genera un nuevo deck de UNO con 108 Cartas de 4 Colores
     """

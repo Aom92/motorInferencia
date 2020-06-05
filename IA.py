@@ -2,16 +2,17 @@ from Jugador import Jugador
 from posibilidades import Posibilidades
 from arbolDecision import ArbolDecision
 from PAT import jugadaValida
+from Mazo import Mazo
 import random
 
 
 class IA(Jugador):
 
-    def __init__(self, nombre,mazo, tablero):
+    def __init__(self, nombre, tablero):
         self.nombre = nombre
         self.mano = []                          #Mano de la computadora
-        self.cartas = mazo.cartas               #Conjunto de cartas no jugadas y que no posee el CPU con el cual se verán las posibilidades
-        self.mazo = mazo                        #Objeto mazo para usar posteriormente
+        self.mazo = Mazo()                        #Objeto mazo para usar posteriormente
+        self.cartas = self.mazo.cartas               #Conjunto de cartas no jugadas y que no posee el CPU con el cual se verán las posibilidades
         self.posibilidades = Posibilidades()    #Objeto manejador de posibilidades
         self.arbol = ArbolDecision()            #Objeto manejador del arbol de decisiones
         self.tablero = tablero                  #Tablero en que se juega 
@@ -19,9 +20,9 @@ class IA(Jugador):
         self.contador = 0
     
     """Metodo encargado de tomar una carta del mazo"""
-    def tomarCarta(self, mazo):
+    def tomarCarta(self):
         if(len(self.mazo.getCartas()) > 0):
-            self.mano.append(mazo.tomarCarta())
+            self.mano.append(self.mazo.tomarCarta())
             #Buscamos borrar del conjunto de cartas no jugado las cartas que posee el CPU
             for i in self.mano:
                 for j in self.cartas:

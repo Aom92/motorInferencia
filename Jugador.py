@@ -11,6 +11,7 @@ class Jugador:
         self.nombre = nombre
         self.mano = []
         self.topCard = None
+        self.mazo = Mazo()
     
     """
 
@@ -18,9 +19,9 @@ class Jugador:
     Mazo: cartas disponibles para tomar
 
     """
-    def tomarCarta(self, mazo):
-        if(len(mazo.getCartas()) > 0):
-            self.mano.append(mazo.tomarCarta())
+    def tomarCarta(self):
+        if(len(self.mazo.getCartas()) > 0):
+            self.mano.append(self.mazo.tomarCarta())
             return "Hay cartas"
         return "Ya no hay cartas"
 

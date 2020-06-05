@@ -20,7 +20,7 @@ def Presentacion():
 
 """Funcion encarga de mostrar los detalles del juego en el formato CLI"""
 def Draw(UNO,Tablero,IA,P1):
-    os.system("cls")
+    #os.system("cls")
 
     global turno
 
@@ -50,7 +50,7 @@ Requiere de parametros el objeto IA (jugador CPU), tablero donde se juega y el m
 cartas todavia disponible
 
 """
-def IAPiensa(IA,tablero, mazo):
+def IAPiensa(IA,tablero):
 
     global turno
     global tiro
@@ -58,15 +58,15 @@ def IAPiensa(IA,tablero, mazo):
     #Empezamos checando que la carta jugada anteriormente no sea un comodin que salte el 
     #juego del CPU o lo haga tomar cartas
     if(tablero.getUltimaCarta().getEfecto()=="+2" and tiro=="jugador"):
-        returned = IA.tomarCarta(mazo)
-        returned = IA.tomarCarta(mazo)
+        returned = IA.tomarCarta()
+        returned = IA.tomarCarta()
         return 0
 
     elif(tablero.getPenultimaCarta().getEfecto()=="Comodin +4" and tiro=="jugador"):
-        returned = IA.tomarCarta(mazo)
-        returned = IA.tomarCarta(mazo)
-        returned = IA.tomarCarta(mazo)
-        returned = IA.tomarCarta(mazo)
+        returned = IA.tomarCarta()
+        returned = IA.tomarCarta()
+        returned = IA.tomarCarta()
+        returned = IA.tomarCarta()
         return 0
 
     elif(tablero.getUltimaCarta().getEfecto()=="Salto" and tiro=="jugador"):
@@ -92,8 +92,8 @@ def IAPiensa(IA,tablero, mazo):
                 #En caso de no tener una el CPU tomara una carta hatsa que la jugada ya sea valida
                 while(carta == False or carta == None):
                     print("IA TOMO UNA CARTA")
-                    returned = IA.tomarCarta(mazo)
-                    #print(IA.tomarCarta(mazo))
+                    returned = IA.tomarCarta()
+                    #print(IA.tomarCarta())
 
                     #Checamos que todavía hayan cartas en el juego
                     if(returned == "Ya no hay cartas"):
@@ -140,7 +140,7 @@ Requiere de parametros el objeto IA (jugador CPU), tablero donde se juega y el m
 cartas todavia disponible
 
 """
-def juegaJugador(jugador, tablero, mazo):
+def juegaJugador(jugador, tablero):
 
     global tiro
 
@@ -148,12 +148,12 @@ def juegaJugador(jugador, tablero, mazo):
     #juego del jugador o lo haga tomar cartas
     if(tablero.getUltimaCarta().getEfecto()=="+2" and tiro=="IA"):
         for i in range(0,2):
-            returned = jugador.tomarCarta(mazo)
+            returned = jugador.tomarCarta()
         return
 
     elif(tablero.getPenultimaCarta().getEfecto()=="Comodin +4" and tiro=="IA"):
         for i in range(0,4):
-            returned = jugador.tomarCarta(mazo)
+            returned = jugador.tomarCarta()
         return
 
     elif(tablero.getUltimaCarta().getEfecto()=="Salto" and tiro=="IA"):
@@ -171,7 +171,7 @@ def juegaJugador(jugador, tablero, mazo):
         carta = None
         #En caso de tomar una carta se repite el proceso hasta que el jugador deje una
         while(yes == "Y" or yes == "y"):
-            returned = jugador.tomarCarta(mazo)
+            returned = jugador.tomarCarta()
 
             #Checamos que todavía hayan cartas en el mazo
             if(returned == "Ya no hay cartas"):
@@ -205,7 +205,7 @@ def juegaJugador(jugador, tablero, mazo):
         #Buscamos que el valor de indice ingresado exista
         if(i >= len(jugador.getMano())):
             print("Numero ingresado erroneo")
-            juegaJugador(jugador, tablero, mazo)
+            juegaJugador(jugador, tablero)
 
         carta = jugador.getCarta(i)
 
@@ -217,7 +217,7 @@ def juegaJugador(jugador, tablero, mazo):
 
             #Volver a checar si la carta debe ser tirada por un glitch dentro de PAT
             if(valido):
-                if( (carta.getColor() != tablero.getUltimaCarta().getColor() ) and ( str(carta.getValue()) != str(tablero.getUltimaCarta().getValue() )) ):
+                if( (carta.getColor() != tablero.getUltimaCarta().getColor() ) and ( str(carta.getValue()) != str(tablero.getUltimaCarta().getValue() )) and ( carta.getEfecto() == tablero.getUltimaCarta().getValue() ) ):
                     valido = False
                     print("Jugada invalida")
                 
@@ -269,24 +269,24 @@ while ( estado ):
         mazo = Mazo()
         P1 = Jugador(nametag)
         Tablero = Jugador("Tablero")
-        IA = IA("PC",mazo,Tablero)
+        IA = IA("PC",Tablero)
 
         #Se revuelve el mazo
         mazo.revolver()
 
 
-        returned = Tablero.tomarCarta(mazo)
+        returned = Tablero.tomarCarta()
         print(returned)
         #Repartir las 7 Cartas iniciales
         for i in range(0,7):
-            IA.tomarCarta(mazo)
-            P1.tomarCarta(mazo)
+            IA.tomarCarta()
+            P1.tomarCarta()
 
         #Se toma una carta del Mazo para iniciar el juego:
         comodin = True
         while(comodin):
             if(Tablero.getUltimaCarta().getEfecto()!=""):
-                Tablero.tomarCarta(mazo)
+                Tablero.tomarCarta()
             else:
                 comodin = False
         update = True
@@ -299,9 +299,9 @@ while ( estado ):
     #Logica del Juego
     #Inicia jugando el usuario
     turno = turno + 1
-    pasaJugador = juegaJugador(P1, Tablero, mazo)
+    pasaJugador = juegaJugador(P1, Tablero)
     IA.setContador(len(P1.getMano()))
-    pasaIA = IAPiensa(IA,Tablero,mazo)
+    pasaIA = IAPiensa(IA,Tablero)
 
     #Por reglas del juego la computadora debe de indicar cuando le queda una sola carta
     UNO=False
