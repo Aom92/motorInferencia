@@ -29,7 +29,8 @@ def Draw(UNO,Tablero,IA,P1):
     print("== Turno {}:  ==".format(turno))
 
     print("========  Cartas de {}:  ========".format(IA.getName()))
-    print("{} cartas en mano ".format(len(IA.mano)))
+    IA.mostrarMano()
+    #print("{} cartas en mano ".format(len(IA.mano)))
 
     print("========  En la mesa... : ==========".format(Tablero.getName()))
     Tablero.mostrarMano()
