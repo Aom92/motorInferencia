@@ -29,7 +29,7 @@ def Draw(UNO,Tablero,IA,P1):
     print("== Turno {}:  ==".format(turno))
 
     print("========  Cartas de {}:  ========".format(IA.getName()))
-    IA.mostrarMano()
+    print("{} cartas en mano ".format(len(IA.mano)))
 
     print("========  En la mesa... : ==========".format(Tablero.getName()))
     Tablero.mostrarMano()
@@ -240,7 +240,17 @@ def juegaJugador(jugador, tablero, mazo):
         for i in opciones:
             print(str(iter)+")"+ i)
             iter = iter + 1
-        i = int(input("Ingrese numero correspondiente al color\n$ "))
+        while(True):
+            try:
+                i = int(input("Ingrese numero correspondiente al color\n$ "))
+                pass
+            except:
+                print("Ingrese un valor numerico por favor")
+                pass
+            else:
+                break
+                pass
+        
         nuevaCarta = Carta("",opciones[i],"")
         tablero.recibeCarta(nuevaCarta)
     
