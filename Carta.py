@@ -9,6 +9,13 @@ class Carta:
         self.numero = numero
         self.color = color
         self.efecto = efecto
+        if(efecto == ""):
+            self.im_filename = f"./images/UNO-Card_{color}{numero}.png"
+        elif(efecto == "Comodin" or efecto == "Comodin +4"):
+            self.im_filename = f"./images/UNO-Card_{efecto}.png"
+        else:
+            self.im_filename = f"./images/UNO-Card_{color}{efecto}.png"            
+
     
     """Imprime los atributos de la carta"""
     def mostrar(self):

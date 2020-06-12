@@ -1,13 +1,42 @@
 #Testeo del modulo arcade
 
 import arcade
+import os
+from Mazo import Mazo
 
 #Constantes de dibuji
 SCREEN_WIDTH = 600
 SCREEN_HEIGHT = 800
 SCREEN_TITLE = "HUEVOSSSS"
 RADIUS = 150
-SCALING = 2.0
+
+#Constantes para las cartas
+CARD_SCALE = 0.6
+
+#Que tan grande son las cartas
+CARD_WIDTH = 140 * CARD_SCALE
+CARD_HEIGHT = 140 * CARD_SCALE
+
+#Que tan grande es el tapete de juego
+MAT_PERCENT_OVERSIZE = 1.25
+MAT_HEIGHT = int(CARD_HEIGHT * MAT_PERCENT_OVERSIZE )
+MAT_WIDTH = int(CARD_WIDTH * MAT_PERCENT_OVERSIZE )
+
+#Cuanto espacio se deja entre los tapetes
+#Porcentajes del tamaño del tapete
+VERTICAL_MARGIN_PERCENT = 0.10
+HORIZONTAL_MARGIN_PERCENT = 0.10
+
+#Coordenada Y de fila inferior
+BOTTOM_Y = MAT_HEIGHT / 2 + MAT_HEIGHT * VERTICAL_MARGIN_PERCENT
+
+#Coordenada X donde empezaremos a poner cosas en la izqueirda
+START_X = MAT_WIDTH / 2 + MAT_WIDTH * HORIZONTAL_MARGIN_PERCENT
+
+file_path = os.path.dirname(os.path.abspath(__file__))
+os.chdir(file_path)
+
+
 
 class UnoGame(arcade.Window):
     """
@@ -28,10 +57,14 @@ class UnoGame(arcade.Window):
         arcade.set_background_color(arcade.color.SKY_BLUE)
 
         #Configurar Mazo
-        for num in range(0,108):
-            carta = arcade.Sprite("images/UNO-Card_"+str(num)+".png",SCALING)
+
+        self.deck = Mazo()
+        self.deck.inicializar()
+
+        for card in self.deck.cartas:
+            carta = arcade.Sprite(card.im_filename,CARD_SCALE)
             carta.center_y = self.height / 2
-            #carta.left = 10
+            carta.left = 10
             self.all_sprites.append(carta)
 
     def on_key_press(self, symbol, modifiers):
@@ -74,12 +107,16 @@ class UnoGame(arcade.Window):
 
 
 
-Juego = UnoGame(SCREEN_HEIGHT,SCREEN_WIDTH,SCREEN_TITLE)
 
-#ABRIR UNA VENTANA:
+def Game():
+    
+    Juego = UnoGame(SCREEN_HEIGHT,SCREEN_WIDTH,SCREEN_TITLE)
+    #ABRIR UNA VENTANA: 
+    Juego.setup()
 
-Juego.setup()
+    #Mostrar todo
+    arcade.run()
 
+if __name__ == "__main__":
+    Game()
 
-#Mostrar todo
-arcade.run()
