@@ -45,7 +45,19 @@ class UnoGame(arcade.Window):
     def __init__(self, width, height, title, fullscreen=False, resizable=False, update_rate=1 /60, antialiasing=True):
         super().__init__(width=width, height=height, title=title, fullscreen=fullscreen, resizable=resizable, update_rate=update_rate, antialiasing=antialiasing)
         #Definir sprites de las cartas.
-        self.lista_cartas = arcade.SpriteList()
+        self.lista_cartas = None
+        
+        #Lista de cartas que se esten jugando o no
+        arcade.set_background_color(arcade.color.AMAZON)
+
+        #Lista de carta que vamos a mover
+        self.held_cards = None
+
+        #Posicion original de las cartas que se estan moviendo.
+        self.held_card_original_position = None
+
+
+
         self.all_sprites = arcade.SpriteList()
         self.paused = False
 
@@ -53,8 +65,17 @@ class UnoGame(arcade.Window):
         """
         Preparar el juego para jugar.
         """
-        #Poner un color de fondo.
-        arcade.set_background_color(arcade.color.SKY_BLUE)
+        
+        #Lista de Cartas que arrastramos con el mouse
+        self.held_cards = []
+
+        #Posicion original de las cartas que se estan moviendo..
+        self.held_card_original_position = []
+
+        #Sprite list de las cartas
+        self.lista_cartas = arcade.SpriteList()
+
+
 
         #Configurar Mazo
 
@@ -66,6 +87,60 @@ class UnoGame(arcade.Window):
             carta.center_y = self.height / 2
             carta.left = 10
             self.all_sprites.append(carta)
+
+    def pull_to_top(self,card):
+        """ Pull card to top of rendering order (last to render, looks on-top) """
+        # Find the index of the card
+        index = self.lista_cartas.index(card)
+        # Loop and pull all the other cards down towards the zero end
+        for i in range(index, len(self.card_list) - 1):
+            self.lista_cartas[i] = self.lista_cartas[i + 1]
+        # Put this card at the right-side/top/size of list
+        self.lista_cartas[len(self.lista_cartas) - 1] = card            
+
+    def on_mouse_press(self, x, y, button, modifiers):
+        """Se llama cuando el usuario presiana un boton del mouse
+        """
+        #Obtener la lista de cartas a la que les hemos hecho click
+        cartas = arcade.get_sprites_at_point( (x,y) , self.lista_cartas)
+
+        #Revisamos si hemos clickeado una carta.
+        if ( len(cartas) > 0 ):
+            #Puede que sea una carta en una pila de cartas
+            carta_primaria = cartas[-1]
+
+            #En todos los demas casos tomaremos la carta boca arriba
+            self.held_cards = [carta_primaria]
+            #Guardar la posicion
+            self.held_card_original_position = [self.held_cards[0].position]
+            #Poner la carta en la cima
+            self.pull_to_top(self.held_cards[0])
+
+        #return super().on_mouse_press(x, y, button, modifiers)
+
+    def on_mouse_motion(self, x, y, dx, dy):
+        """Usuario mueve el mouse
+        """
+        #Si estamos haciendo click en una carta esta se movera con el mouse
+        for carta in self.held_cards:
+            carta.center_x += dx
+            carta.center_y += dy
+
+        #return super().on_mouse_motion(x, y, dx, dy)
+
+    def on_mouse_release(self, x, y, button, modifiers):
+        """Llamada cuando el usuario deja de hacer click en un boton
+        """
+        #Si no tenemos cartas no ocurre nada
+        if len(self.held_cards) == 0:
+            return
+
+        #Ya no estamos sosteniendo ninguna carta
+        self.held_cards = []
+
+
+        #return super().on_mouse_release(x, y, button, modifiers)
+
 
     def on_key_press(self, symbol, modifiers):
         """Manejar los inputs del usuario en el teclado
@@ -95,6 +170,7 @@ class UnoGame(arcade.Window):
             return
 
         #Actualizar todo lo demas
+        self.lista_cartas.update()
         self.all_sprites.update()
 
         #Mas cosas por hacer ...
@@ -103,6 +179,7 @@ class UnoGame(arcade.Window):
         """Dibuja todos los objetos del juego en pantalla
         """
         arcade.start_render()
+        self.lista_cartas.draw()
         self.all_sprites.draw()
 
 
