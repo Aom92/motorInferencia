@@ -7,7 +7,7 @@ from Mazo import Mazo
 #Constantes de dibuji
 SCREEN_WIDTH = 600
 SCREEN_HEIGHT = 800
-SCREEN_TITLE = "HUEVOSSSS"
+SCREEN_TITLE = "TEST"
 RADIUS = 150
 
 #Constantes para las cartas
@@ -75,18 +75,17 @@ class UnoGame(arcade.Window):
         #Sprite list de las cartas
         self.lista_cartas = arcade.SpriteList()
 
-
-
         #Configurar Mazo
 
         self.deck = Mazo()
         self.deck.inicializar()
+        self.deck.revolver()
 
         for card in self.deck.cartas:
             carta = arcade.Sprite(card.im_filename,CARD_SCALE)
             carta.center_y = self.height / 2
-            carta.left = 10
-            self.all_sprites.append(carta)
+            carta.position = START_X, BOTTOM_Y
+            self.lista_cartas.append(carta)
 
     def pull_to_top(self,card):
         """ Pull card to top of rendering order (last to render, looks on-top) """
