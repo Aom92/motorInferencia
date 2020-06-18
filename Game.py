@@ -33,6 +33,15 @@ BOTTOM_Y = MAT_HEIGHT / 2 + MAT_HEIGHT * VERTICAL_MARGIN_PERCENT
 #Coordenada X donde empezaremos a poner cosas en la izqueirda
 START_X = MAT_WIDTH / 2 + MAT_WIDTH * HORIZONTAL_MARGIN_PERCENT
 
+#Constantes para los tapetes
+TOP_Y = SCREEN_HEIGHT - MAT_HEIGHT / 2 - MAT_HEIGHT
+
+MIDDLE_Y = TOP_Y - MAT_HEIGHT - MAT_HEIGHT * VERTICAL_MARGIN_PERCENT
+
+X_SPACING = MAT_WIDTH + MAT_WIDTH * HORIZONTAL_MARGIN_PERCENT
+
+
+
 file_path = os.path.dirname(os.path.abspath(__file__))
 os.chdir(file_path)
 
@@ -56,7 +65,8 @@ class UnoGame(arcade.Window):
         #Posicion original de las cartas que se estan moviendo.
         self.held_card_original_position = None
 
-
+        #Sprite list con los tapetes donde se ponen las cartas 
+        self.pile_mat_list = None
 
         self.all_sprites = arcade.SpriteList()
         self.paused = False
@@ -74,7 +84,7 @@ class UnoGame(arcade.Window):
 
         #Sprite list de las cartas
         self.lista_cartas = arcade.SpriteList()
-
+        
         #Configurar Mazo
 
         self.deck = Mazo()
@@ -86,6 +96,31 @@ class UnoGame(arcade.Window):
             carta.center_y = self.height / 2
             carta.position = START_X, BOTTOM_Y
             self.lista_cartas.append(carta)
+
+        # --- Crear los tapetes donde las cartas van.
+        # Sprite list con los tapetes donde van las cartas            
+
+    def on_update(self, delta_time: float):
+        """Actualizar el frame
+        Argumentos:
+            delta_time {float} -- Tiempo desde la ultima actualizacion
+        """
+        #Si estamos pausados, no actualizamos nada
+        if self.paused:
+            return
+
+        #Actualizar todo lo demas
+        self.lista_cartas.update()
+        self.all_sprites.update()
+
+        #Mas cosas por hacer ...
+
+    def on_draw(self):
+        """Dibuja todos los objetos del juego en pantalla
+        """
+        arcade.start_render()
+        self.lista_cartas.draw()
+        #self.all_sprites.draw()
 
     def pull_to_top(self,card):
         """ Pull card to top of rendering order (last to render, looks on-top) """
@@ -107,13 +142,13 @@ class UnoGame(arcade.Window):
         if ( len(cartas) > 0 ):
             #Puede que sea una carta en una pila de cartas
             carta_primaria = cartas[-1]
-
             #En todos los demas casos tomaremos la carta boca arriba
             self.held_cards = [carta_primaria]
             #Guardar la posicion
             self.held_card_original_position = [self.held_cards[0].position]
             #Poner la carta en la cima
-            self.pull_to_top(self.held_cards[0])
+            card = self.held_cards[0]
+            self.pull_to_top( card )
 
         #return super().on_mouse_press(x, y, button, modifiers)
 
@@ -156,30 +191,8 @@ class UnoGame(arcade.Window):
         if symbol == arcade.key.P:
             self.paused = not self.paused
 
-        if symbol == arcade.MOUSE_BUTTON_RIGHT:
-            lol
     
-    def on_update(self, delta_time: float):
-        """Actualizar el frame
-        Argumentos:
-            delta_time {float} -- Tiempo desde la ultima actualizacion
-        """
-        #Si estamos pausados, no actualizamos nada
-        if self.paused:
-            return
-
-        #Actualizar todo lo demas
-        self.lista_cartas.update()
-        self.all_sprites.update()
-
-        #Mas cosas por hacer ...
-
-    def on_draw(self):
-        """Dibuja todos los objetos del juego en pantalla
-        """
-        arcade.start_render()
-        self.lista_cartas.draw()
-        self.all_sprites.draw()
+    
 
 
 
