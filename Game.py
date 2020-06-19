@@ -99,7 +99,16 @@ class UnoGame(arcade.Window):
 
         # --- Crear los tapetes donde las cartas van.
         # Sprite list con los tapetes donde van las cartas            
+        self.pile_mat_list: arcade.SpriteList = arcade.SpriteList()
 
+        #Crear los tapetes para las cartas boca arriba y boca abajo.
+        pila = arcade.SpriteSolidColor(MAT_WIDTH,MAT_HEIGHT,arcade.csscolor.DARK_OLIVE_GREEN)
+        pila.position = START_X, BOTTOM_Y
+        self.pile_mat_list.append(pila)
+        pila.position = START_X + X_SPACING, BOTTOM_Y
+        self.pile_mat_list.append(pila)
+
+        
     def on_update(self, delta_time: float):
         """Actualizar el frame
         Argumentos:
@@ -118,16 +127,20 @@ class UnoGame(arcade.Window):
     def on_draw(self):
         """Dibuja todos los objetos del juego en pantalla
         """
+        #Limpiar la pantalla
         arcade.start_render()
+        #Dibujar los tapetes de cartas
+        self.pile_mat_list.draw()
+        #Dibujar las cartas
+        self.all_sprites.draw()
         self.lista_cartas.draw()
-        #self.all_sprites.draw()
 
     def pull_to_top(self,card):
         """ Pull card to top of rendering order (last to render, looks on-top) """
         # Find the index of the card
-        index = self.lista_cartas.index(card)
+        index = len(self.lista_cartas)
         # Loop and pull all the other cards down towards the zero end
-        for i in range(index, len(self.card_list) - 1):
+        for i in range(index, len(self.lista_cartas) - 1):
             self.lista_cartas[i] = self.lista_cartas[i + 1]
         # Put this card at the right-side/top/size of list
         self.lista_cartas[len(self.lista_cartas) - 1] = card            
@@ -148,7 +161,8 @@ class UnoGame(arcade.Window):
             self.held_card_original_position = [self.held_cards[0].position]
             #Poner la carta en la cima
             card = self.held_cards[0]
-            self.pull_to_top( card )
+            
+            #self.pull_to_top( card ) TODO
 
         #return super().on_mouse_press(x, y, button, modifiers)
 
@@ -168,6 +182,15 @@ class UnoGame(arcade.Window):
         #Si no tenemos cartas no ocurre nada
         if len(self.held_cards) == 0:
             return
+
+        #Encontrar la pila de cartas mas cercana, en caso de que estemos en contacto con mas de una.
+        pila, distancia = arcade.get_closest_sprite(self.held_cards[0],self.pile_mat_list)
+        reiniciar_pos = True
+
+
+
+
+
 
         #Ya no estamos sosteniendo ninguna carta
         self.held_cards = []
