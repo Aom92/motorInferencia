@@ -40,7 +40,11 @@ MIDDLE_Y = TOP_Y - MAT_HEIGHT - MAT_HEIGHT * VERTICAL_MARGIN_PERCENT
 
 X_SPACING = MAT_WIDTH + MAT_WIDTH * HORIZONTAL_MARGIN_PERCENT
 
-
+#Constantes que representan el proposito de cada pila en el juego.
+PILE_COUNT = 3
+BOTTOM_FACE_DOWN_PILE = 0
+PLAYER_PILE = 1
+IA_PILE = 2
 
 file_path = os.path.dirname(os.path.abspath(__file__))
 os.chdir(file_path)
@@ -67,6 +71,10 @@ class UnoGame(arcade.Window):
 
         #Sprite list con los tapetes donde se ponen las cartas 
         self.pile_mat_list = None
+
+        #
+        self.piles = None
+
 
         self.all_sprites = arcade.SpriteList()
         self.paused = False
@@ -187,6 +195,23 @@ class UnoGame(arcade.Window):
         pila, distancia = arcade.get_closest_sprite(self.held_cards[0],self.pile_mat_list)
         reiniciar_pos = True
 
+        #Checamos si estamos en contacto con la pila mas cercana
+        if arcade.check_for_collision(self.held_cards[0],pila):
+            
+            #Por carta, moverla en la pila que soltemos
+            for i, carta_soltada in enumerate(self.held_cards):
+                #Mover las cartas a la posicion adecuada.
+                carta_soltada.position = pila.center_x, pila.center_y
+
+            #Exito no hay que reiniciar la posicion de la carta
+            reiniciar_pos = False
+        
+        if reiniciar_pos:
+            #Donde soltamos no fue una posicion valida por lo tante regresamos al lugar inicial
+            for pile_index, carta in enumerate(self.held_cards):
+                carta.position = self.held_card_original_position[pile_index]
+            
+        
 
 
 
