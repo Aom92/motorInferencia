@@ -225,7 +225,7 @@ class UnoGame(arcade.Window):
             #Poner la carta en la cima
             card = self.held_cards[0]
             
-            #self.pull_to_top( card ) TODO
+            self.pull_to_top( card ) 
 
         #return super().on_mouse_press(x, y, button, modifiers)
 
@@ -310,5 +310,6 @@ def Game():
     arcade.run()
 
 if __name__ == "__main__":
+    print(arcade.__version__)
     Game()
 
