@@ -3,6 +3,8 @@
 import arcade
 import os
 from Mazo import Mazo
+from Jugador import Jugador
+
 
 #Constantes de dibuji
 SCREEN_WIDTH = 600
@@ -50,6 +52,10 @@ file_path = os.path.dirname(os.path.abspath(__file__))
 os.chdir(file_path)
 
 
+#PLAYER CONTANTS
+JUGADOR1 = 0
+IA = 0
+
 
 class UnoGame(arcade.Window):
     """
@@ -57,6 +63,12 @@ class UnoGame(arcade.Window):
     """
     def __init__(self, width, height, title, fullscreen=False, resizable=False, update_rate=1 /60, antialiasing=True):
         super().__init__(width=width, height=height, title=title, fullscreen=fullscreen, resizable=resizable, update_rate=update_rate, antialiasing=antialiasing)
+        
+        #Entidades de juego
+        self.tablero = None
+        self.players = []
+        
+        
         #Definir sprites de las cartas.
         self.lista_cartas = None
         
@@ -73,7 +85,7 @@ class UnoGame(arcade.Window):
         self.pile_mat_list = None
 
         #
-        self.piles = None
+        self.piles = []
 
 
         self.all_sprites = arcade.SpriteList()
@@ -87,23 +99,49 @@ class UnoGame(arcade.Window):
         #Lista de Cartas que arrastramos con el mouse
         self.held_cards = []
 
+        self.piles = []
+
+        #Pilas de juego
+        
+        for i in range(PILE_COUNT):
+            self.piles.append(arcade.SpriteList())
+        
+
         #Posicion original de las cartas que se estan moviendo..
         self.held_card_original_position = []
 
         #Sprite list de las cartas
         self.lista_cartas = arcade.SpriteList()
         
-        #Configurar Mazo
+        #Configurar Mazo y Jugadores
 
         self.deck = Mazo()
         self.deck.inicializar()
         self.deck.revolver()
+        
+        self.tablero = []
+
+        self.players.append(Jugador("Player 1"))
+        self.players.append(Jugador("IA"))
+        
+        self.players[JUGADOR1].mano = self.piles[PLAYER_PILE]
+        self.players[IA].mano = self.piles[IA_PILE]
 
         for card in self.deck.cartas:
             carta = arcade.Sprite(card.im_filename,CARD_SCALE)
             carta.center_y = self.height / 2
             carta.position = START_X, BOTTOM_Y
             self.lista_cartas.append(carta)
+        for i in range(0,7):
+                #self.players[JUGADOR1].tomarCarta()
+                #self.players[IA].tomarCarta()
+            carta = self.lista_cartas.pop()
+            carta.position = START_X, BOTTOM_Y + 150
+            self.piles[PLAYER_PILE].append(carta)
+            carta = self.lista_cartas.pop()
+            carta.position = START_X, BOTTOM_Y + 350
+            self.piles[IA_PILE].append(carta)
+
 
         # --- Crear los tapetes donde las cartas van.
         # Sprite list con los tapetes donde van las cartas            
@@ -128,6 +166,8 @@ class UnoGame(arcade.Window):
 
         #Actualizar todo lo demas
         self.lista_cartas.update()
+        self.piles[PLAYER_PILE].update()
+        self.piles[IA_PILE].update()
         self.all_sprites.update()
 
         #Mas cosas por hacer ...
@@ -135,6 +175,7 @@ class UnoGame(arcade.Window):
     def on_draw(self):
         """Dibuja todos los objetos del juego en pantalla
         """
+
         #Limpiar la pantalla
         arcade.start_render()
         #Dibujar los tapetes de cartas
@@ -142,6 +183,8 @@ class UnoGame(arcade.Window):
         #Dibujar las cartas
         self.all_sprites.draw()
         self.lista_cartas.draw()
+        self.piles[PLAYER_PILE].draw()
+        self.piles[IA_PILE].draw()
 
     def pull_to_top(self,card):
         """ Pull card to top of rendering order (last to render, looks on-top) """
@@ -156,10 +199,22 @@ class UnoGame(arcade.Window):
     def on_mouse_press(self, x, y, button, modifiers):
         """Se llama cuando el usuario presiana un boton del mouse
         """
-        #Obtener la lista de cartas a la que les hemos hecho click
+        #Revisar si hemos hecho click en la el mazo de cartas.
         cartas = arcade.get_sprites_at_point( (x,y) , self.lista_cartas)
 
-        #Revisamos si hemos clickeado una carta.
+        
+           
+
+        #Revisamos si hemos hecho click en el mazo del jugador
+        if (not cartas):
+            cartas = arcade.get_sprites_at_point( (x,y), self.piles[PLAYER_PILE])
+            #Actualizar como se muestran las cartas al jugador:
+            i = 0
+            for carta in self.piles[PLAYER_PILE]:
+                carta.position = START_X + i*25, BOTTOM_Y + 150
+                i += 1
+
+        #Revisamos si hemos clickeado una carta
         if ( len(cartas) > 0 ):
             #Puede que sea una carta en una pila de cartas
             carta_primaria = cartas[-1]

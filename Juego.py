@@ -257,84 +257,86 @@ def juegaJugador(jugador, tablero):
     
     return "No paso"
 
-while ( estado ):
-
-    #Inicio del Juego
-    if(turno == 0):
-
-        Presentacion()
-
-        nametag = input("Ingrese su nombre para comenzar a jugar: ")
-
-        #Se inicializan el mazo junto a los jugadores
-        mazo = Mazo()
-        P1 = Jugador(nametag)
-        Tablero = Jugador("Tablero")
-        IA = IA("PC",Tablero)
-
-        #Se revuelve el mazo
-        mazo.revolver()
-
-
-        returned = Tablero.tomarCarta()
-        print(returned)
-        #Repartir las 7 Cartas iniciales
-        for i in range(0,7):
-            IA.tomarCarta()
-            P1.tomarCarta()
-
-        #Se toma una carta del Mazo para iniciar el juego:
-        comodin = True
-        while(comodin):
-            if(Tablero.getUltimaCarta().getEfecto()!=""):
-                Tablero.tomarCarta()
-            else:
-                comodin = False
-        update = True
-        turno = turno + 1
-        if (update):
-            Draw(False,Tablero,IA,P1)
-            update = False
-
-
-    #Logica del Juego
-    #Inicia jugando el usuario
-    turno = turno + 1
-    pasaJugador = juegaJugador(P1, Tablero)
-    IA.setContador(len(P1.getMano()))
-    pasaIA = IAPiensa(IA,Tablero)
-
-    #Por reglas del juego la computadora debe de indicar cuando le queda una sola carta
-    UNO=False
-    if(len(IA.getMano())==1):
-        UNO=True
-
+if __name__ == "__main__":
     
-    Draw(UNO,Tablero,IA,P1)
+    while ( estado ):
 
-    if(len(IA.getMano())==0):
-        print("Lo sentimos, gano la computadora")
-        estado = False
-    if(len(P1.getMano())==0):
-        print("Felicidades, usted ("+P1.getName()+") a ganado")
-        estado = False
+        #Inicio del Juego
+        if(turno == 0):
 
-    if( (pasaJugador == "Paso" and pasaIA == "Paso") and len(mazo.cartas) == 0 ):
-        gana = ""
-        if(P1.getTamCartas() > IA.getTamCartas() ):
-            gana = "IA"
-        else:
-            gana = P1.getName()
+            Presentacion()
 
-        print("Ya no hay mas cartas en el juego, el ganado es:", gana)
+            nametag = input("Ingrese su nombre para comenzar a jugar: ")
 
-        print("Puntuacion de {} = {} ".format(P1.getName(),len(P1.mano)))
-        print("\n")
-        print("Puntuacion de {} = {} ".format(IA.getName(),len(IA.mano)))
-        estado = False
+            #Se inicializan el mazo junto a los jugadores
+            mazo = Mazo()
+            P1 = Jugador(nametag)
+            Tablero = Jugador("Tablero")
+            IA = IA("PC",Tablero)
 
-print("\nGracias por jugar!")
-input("\nPresione una tecla para finalizar...")
+            #Se revuelve el mazo
+            mazo.revolver()
+
+
+            returned = Tablero.tomarCarta()
+            print(returned)
+            #Repartir las 7 Cartas iniciales
+            for i in range(0,7):
+                IA.tomarCarta()
+                P1.tomarCarta()
+
+            #Se toma una carta del Mazo para iniciar el juego:
+            comodin = True
+            while(comodin):
+                if(Tablero.getUltimaCarta().getEfecto()!=""):
+                    Tablero.tomarCarta()
+                else:
+                    comodin = False
+            update = True
+            turno = turno + 1
+            if (update):
+                Draw(False,Tablero,IA,P1)
+                update = False
+
+
+        #Logica del Juego
+        #Inicia jugando el usuario
+        turno = turno + 1
+        pasaJugador = juegaJugador(P1, Tablero)
+        IA.setContador(len(P1.getMano()))
+        pasaIA = IAPiensa(IA,Tablero)
+
+        #Por reglas del juego la computadora debe de indicar cuando le queda una sola carta
+        UNO=False
+        if(len(IA.getMano())==1):
+            UNO=True
+
+        
+        Draw(UNO,Tablero,IA,P1)
+
+        if(len(IA.getMano())==0):
+            print("Lo sentimos, gano la computadora")
+            estado = False
+        if(len(P1.getMano())==0):
+            print("Felicidades, usted ("+P1.getName()+") a ganado")
+            estado = False
+
+        if( (pasaJugador == "Paso" and pasaIA == "Paso") and len(mazo.cartas) == 0 ):
+            gana = ""
+            if(P1.getTamCartas() > IA.getTamCartas() ):
+                gana = "IA"
+            else:
+                gana = P1.getName()
+
+            print("Ya no hay mas cartas en el juego, el ganado es:", gana)
+
+            print("Puntuacion de {} = {} ".format(P1.getName(),len(P1.mano)))
+            print("\n")
+            print("Puntuacion de {} = {} ".format(IA.getName(),len(IA.mano)))
+            estado = False
+
+    print("\nGracias por jugar!")
+    input("\nPresione una tecla para finalizar...")
     
 
 
