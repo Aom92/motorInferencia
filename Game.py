@@ -10,7 +10,6 @@ from Jugador import Jugador
 SCREEN_WIDTH = 600
 SCREEN_HEIGHT = 800
 SCREEN_TITLE = "TEST"
-RADIUS = 150
 
 #Constantes para las cartas
 CARD_SCALE = 0.6
@@ -20,7 +19,7 @@ CARD_WIDTH = 140 * CARD_SCALE
 CARD_HEIGHT = 140 * CARD_SCALE
 
 #Que tan grande es el tapete de juego
-MAT_PERCENT_OVERSIZE = 1.25
+MAT_PERCENT_OVERSIZE = 1.55
 MAT_HEIGHT = int(CARD_HEIGHT * MAT_PERCENT_OVERSIZE )
 MAT_WIDTH = int(CARD_WIDTH * MAT_PERCENT_OVERSIZE )
 
@@ -43,10 +42,11 @@ MIDDLE_Y = TOP_Y - MAT_HEIGHT - MAT_HEIGHT * VERTICAL_MARGIN_PERCENT
 X_SPACING = MAT_WIDTH + MAT_WIDTH * HORIZONTAL_MARGIN_PERCENT
 
 #Constantes que representan el proposito de cada pila en el juego.
-PILE_COUNT = 3
+PILE_COUNT = 4
 BOTTOM_FACE_DOWN_PILE = 0
 PLAYER_PILE = 1
 IA_PILE = 2
+PLAY_PILE = 3
 
 file_path = os.path.dirname(os.path.abspath(__file__))
 os.chdir(file_path)
@@ -70,7 +70,7 @@ class UnoGame(arcade.Window):
         
         
         #Definir sprites de las cartas.
-        self.lista_cartas = None
+        self.lista_cartas = arcade.SpriteList()
         
         #Lista de cartas que se esten jugando o no
         arcade.set_background_color(arcade.color.AMAZON)
@@ -87,8 +87,6 @@ class UnoGame(arcade.Window):
         #
         self.piles = []
 
-
-        self.all_sprites = arcade.SpriteList()
         self.paused = False
 
     def setup(self):
@@ -133,8 +131,7 @@ class UnoGame(arcade.Window):
             carta.position = START_X, BOTTOM_Y
             self.lista_cartas.append(carta)
         for i in range(0,7):
-                #self.players[JUGADOR1].tomarCarta()
-                #self.players[IA].tomarCarta()
+                
             carta = self.lista_cartas.pop()
             carta.position = START_X, BOTTOM_Y + 150
             self.piles[PLAYER_PILE].append(carta)
@@ -151,8 +148,15 @@ class UnoGame(arcade.Window):
         pila = arcade.SpriteSolidColor(MAT_WIDTH,MAT_HEIGHT,arcade.csscolor.DARK_OLIVE_GREEN)
         pila.position = START_X, BOTTOM_Y
         self.pile_mat_list.append(pila)
+
+        pila = arcade.SpriteSolidColor(MAT_WIDTH,MAT_HEIGHT,arcade.csscolor.DARK_OLIVE_GREEN)
         pila.position = START_X + X_SPACING, BOTTOM_Y
         self.pile_mat_list.append(pila)
+
+        pila_c = arcade.SpriteSolidColor(MAT_WIDTH,MAT_HEIGHT,arcade.csscolor.DARK_OLIVE_GREEN)
+        pila_c.position = SCREEN_WIDTH/2  ,SCREEN_HEIGHT/2 
+        self.pile_mat_list.append(pila_c)
+
 
         
     def on_update(self, delta_time: float):
@@ -168,7 +172,6 @@ class UnoGame(arcade.Window):
         self.lista_cartas.update()
         self.piles[PLAYER_PILE].update()
         self.piles[IA_PILE].update()
-        self.all_sprites.update()
 
         #Mas cosas por hacer ...
 
@@ -181,20 +184,20 @@ class UnoGame(arcade.Window):
         #Dibujar los tapetes de cartas
         self.pile_mat_list.draw()
         #Dibujar las cartas
-        self.all_sprites.draw()
         self.lista_cartas.draw()
         self.piles[PLAYER_PILE].draw()
         self.piles[IA_PILE].draw()
+        self.piles[PLAY_PILE].draw()
 
-    def pull_to_top(self,card):
+    def pull_to_top(self,card, cardpile):
         """ Pull card to top of rendering order (last to render, looks on-top) """
         # Find the index of the card
-        index = len(self.lista_cartas)
+        index = cardpile.index(card)
         # Loop and pull all the other cards down towards the zero end
-        for i in range(index, len(self.lista_cartas) - 1):
-            self.lista_cartas[i] = self.lista_cartas[i + 1]
+        for i in range(index, len(cardpile) - 1):
+            cardpile[i] = cardpile[i + 1]
         # Put this card at the right-side/top/size of list
-        self.lista_cartas[len(self.lista_cartas) - 1] = card            
+        cardpile[len(cardpile) - 1] = card            
 
     def on_mouse_press(self, x, y, button, modifiers):
         """Se llama cuando el usuario presiana un boton del mouse
@@ -202,17 +205,17 @@ class UnoGame(arcade.Window):
         #Revisar si hemos hecho click en la el mazo de cartas.
         cartas = arcade.get_sprites_at_point( (x,y) , self.lista_cartas)
 
-        
-           
-
         #Revisamos si hemos hecho click en el mazo del jugador
         if (not cartas):
             cartas = arcade.get_sprites_at_point( (x,y), self.piles[PLAYER_PILE])
+            cardpile = self.piles[PLAYER_PILE]
             #Actualizar como se muestran las cartas al jugador:
             i = 0
             for carta in self.piles[PLAYER_PILE]:
                 carta.position = START_X + i*25, BOTTOM_Y + 150
                 i += 1
+        else:
+            cardpile = self.lista_cartas
 
         #Revisamos si hemos clickeado una carta
         if ( len(cartas) > 0 ):
@@ -225,7 +228,8 @@ class UnoGame(arcade.Window):
             #Poner la carta en la cima
             card = self.held_cards[0]
             
-            self.pull_to_top( card ) 
+            self.pull_to_top( card, cardpile )
+            
 
         #return super().on_mouse_press(x, y, button, modifiers)
 
@@ -250,6 +254,14 @@ class UnoGame(arcade.Window):
         pila, distancia = arcade.get_closest_sprite(self.held_cards[0],self.pile_mat_list)
         reiniciar_pos = True
 
+        lcx, lcy = self.lista_cartas._get_center()
+        #pcx, pcy = self.piles[PLAY_PILE]._get_center()
+        if(pila.center_y == lcy):
+            cardpile = self.lista_cartas
+        else:
+            cardpile = self.piles[PLAY_PILE]
+
+
         #Checamos si estamos en contacto con la pila mas cercana
         if arcade.check_for_collision(self.held_cards[0],pila):
             
@@ -257,6 +269,14 @@ class UnoGame(arcade.Window):
             for i, carta_soltada in enumerate(self.held_cards):
                 #Mover las cartas a la posicion adecuada.
                 carta_soltada.position = pila.center_x, pila.center_y
+                try:
+                    cardpile.append(carta_soltada)
+                    self.lista_cartas.pop(self.lista_cartas.index(carta_soltada))
+                    pass
+                except:
+                    cardpile.append(carta_soltada)
+                    self.piles[PLAYER_PILE].pop(self.piles[PLAYER_PILE].index(carta_soltada))
+                    pass
 
             #Exito no hay que reiniciar la posicion de la carta
             reiniciar_pos = False
@@ -305,11 +325,10 @@ def Game():
     Juego = UnoGame(SCREEN_HEIGHT,SCREEN_WIDTH,SCREEN_TITLE)
     #ABRIR UNA VENTANA: 
     Juego.setup()
-
     #Mostrar todo
     arcade.run()
 
 if __name__ == "__main__":
-    print(arcade.__version__)
+    
     Game()
 
